@@ -48,6 +48,61 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["trips"]["Insert"]>;
         Relationships: [];
       };
+      profiles: {
+        Row: {
+          id: string;
+          first_name: string | null;
+          last_name: string | null;
+          fishing_license: string | null;
+          permit_links: PermitLink[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          first_name?: string | null;
+          last_name?: string | null;
+          fishing_license?: string | null;
+          permit_links?: PermitLink[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Relationships: [];
+      };
+      trip_attachments: {
+        Row: {
+          id: string;
+          trip_id: string;
+          user_id: string;
+          file_path: string;
+          file_name: string;
+          file_size: number | null;
+          mime_type: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          trip_id: string;
+          user_id: string;
+          file_path: string;
+          file_name: string;
+          file_size?: number | null;
+          mime_type?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<
+          Database["public"]["Tables"]["trip_attachments"]["Insert"]
+        >;
+        Relationships: [
+          {
+            foreignKeyName: "trip_attachments_trip_id_fkey";
+            columns: ["trip_id"];
+            referencedRelation: "trips";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       catches: {
         Row: {
           id: string;
@@ -97,8 +152,20 @@ export interface Database {
   };
 }
 
+// Permit link shape — stored in profiles.permit_links jsonb array.
+export interface PermitLink {
+  label: string;
+  url: string;
+}
+
 // Convenience aliases for app code.
 export type Trip = Database["public"]["Tables"]["trips"]["Row"];
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+export type TripAttachment =
+  Database["public"]["Tables"]["trip_attachments"]["Row"];
+export type TripAttachmentInsert =
+  Database["public"]["Tables"]["trip_attachments"]["Insert"];
 export type TripInsert = Database["public"]["Tables"]["trips"]["Insert"];
 export type TripUpdate = Database["public"]["Tables"]["trips"]["Update"];
 

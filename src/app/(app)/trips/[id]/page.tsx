@@ -1,16 +1,28 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, Cloud, MapPin, Plus, StickyNote } from "lucide-react";
+import {
+  CalendarDays,
+  Cloud,
+  Edit,
+  MapPin,
+  Plus,
+  StickyNote,
+} from "lucide-react";
 import { getTripById, getCatchesForTrip } from "@/lib/queries/trips";
+import {
+  listAttachmentsForTrip,
+  signedUrlForAttachment,
+} from "@/lib/queries/attachments";
 import { computeTripStats } from "@/lib/stats";
 import { formatDateTime, formatWeight } from "@/lib/format";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/cards/StatCard";
-import { CatchCard } from "@/components/cards/CatchCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StaticMap } from "@/components/maps/StaticMap";
+import { TripCatchItem } from "@/components/catches/TripCatchItem";
+import { TripAttachments } from "@/components/attachments/TripAttachments";
 import { DeleteTripButton } from "./DeleteTripButton";
 
 export default async function TripDetailPage({
@@ -21,14 +33,21 @@ export default async function TripDetailPage({
   const trip = await getTripById(params.id);
   if (!trip) notFound();
 
-  const catches = await getCatchesForTrip(trip.id);
-  const stats = computeTripStats(catches);
+  const [catches, rawAttachments] = await Promise.all([
+    getCatchesForTrip(trip.id),
+    listAttachmentsForTrip(trip.id),
+  ]);
 
-  // catches list inherits trip name for the unified card.
-  const catchesWithTripName = catches.map((c) => ({
-    ...c,
-    trip_name: trip.name,
-  }));
+  // Sign each attachment URL server-side so the client never sees the raw
+  // storage path. Done in parallel — N is small (a handful of PDFs per trip).
+  const attachments = await Promise.all(
+    rawAttachments.map(async (a) => ({
+      ...a,
+      signedUrl: await signedUrlForAttachment(a.file_path),
+    })),
+  );
+
+  const stats = computeTripStats(catches);
 
   return (
     <>
@@ -41,6 +60,11 @@ export default async function TripDetailPage({
         }
         actions={
           <div className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="icon" aria-label="Edytuj wyjazd">
+              <Link href={`/trips/${trip.id}/edit`}>
+                <Edit className="h-4 w-4" />
+              </Link>
+            </Button>
             <DeleteTripButton tripId={trip.id} tripName={trip.name} />
             <Button asChild>
               <Link href={`/trips/${trip.id}/catch/new`}>
@@ -96,7 +120,7 @@ export default async function TripDetailPage({
         <StatCard label="Połowy" value={stats.totalCatches} />
         <StatCard
           label="Łączna waga"
-          value={formatWeight(stats.totalWeightKg || null) || "—"}
+          value={formatWeight(stats.totalWeightKg || null)}
         />
         <StatCard
           label="Największa"
@@ -107,6 +131,10 @@ export default async function TripDetailPage({
           }
           hint={stats.largestFish?.species}
         />
+      </section>
+
+      <section className="mt-8">
+        <TripAttachments tripId={trip.id} initial={attachments} />
       </section>
 
       <section className="mt-8 space-y-4">
@@ -123,9 +151,9 @@ export default async function TripDetailPage({
           />
         ) : (
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {catchesWithTripName.map((c) => (
+            {catches.map((c) => (
               <li key={c.id}>
-                <CatchCard item={c} />
+                <TripCatchItem item={c} tripId={trip.id} />
               </li>
             ))}
           </ul>

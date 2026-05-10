@@ -91,6 +91,38 @@ export const catchSchema = z.object({
 
 export type CatchFormValues = z.infer<typeof catchSchema>;
 
+export const permitLinkSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(2, "Etykieta min. 2 znaki")
+    .max(80, "Etykieta zbyt długa"),
+  url: z.string().trim().url("Nieprawidłowy URL"),
+});
+
+export type PermitLinkValues = z.infer<typeof permitLinkSchema>;
+
+export const profileSchema = z.object({
+  first_name: z
+    .string()
+    .trim()
+    .max(80, "Imię zbyt długie")
+    .nullable(),
+  last_name: z
+    .string()
+    .trim()
+    .max(120, "Nazwisko zbyt długie")
+    .nullable(),
+  fishing_license: z
+    .string()
+    .trim()
+    .max(80, "Numer karty wędkarskiej zbyt długi")
+    .nullable(),
+  permit_links: z.array(permitLinkSchema),
+});
+
+export type ProfileFormValues = z.infer<typeof profileSchema>;
+
 export const loginSchema = z.object({
   email: z.string().email("Nieprawidłowy adres e-mail"),
   password: z

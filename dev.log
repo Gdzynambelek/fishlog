@@ -90,3 +90,293 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  ✓ Compiled in 3.7s (4701 modules)
  ✓ Compiled in 1392ms (4701 modules)
  GET /trips/b3b74358-0a82-4ca1-b262-f4dee5069add/catch/new 200 in 755ms
+ ✓ Compiled in 3.2s (4701 modules)
+ GET /trips/b3b74358-0a82-4ca1-b262-f4dee5069add/catch/new 200 in 714ms
+ ○ Compiling /profile ...
+ ✓ Compiled /profile in 2.1s (2867 modules)
+ ✓ Compiled in 1766ms (2858 modules)
+ ✓ Compiled in 3.1s (5147 modules)
+ ✓ Compiled in 1940ms (5147 modules)
+ ✓ Compiled in 1091ms (2303 modules)
+ ✓ Compiled in 2.5s (5172 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 406ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 849ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 894ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 426ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 741ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 1657ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 486ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 2.2s (2876 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async DashboardPage (dashboard/page.tsx:43:61)
+digest: "1828089172"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async DashboardPage (dashboard/page.tsx:43:61)
+digest: "1828089172"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ GET /dashboard 200 in 3038ms
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 860ms (2307 modules)
+ ✓ Compiled in 1026ms (2307 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async DashboardPage (dashboard/page.tsx:43:61)
+digest: "1828089172"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async DashboardPage (dashboard/page.tsx:43:61)
+digest: "1828089172"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 4.3s (4829 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 1541ms (4829 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled in 634ms (2327 modules)
+ ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
+ ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
+    at getMyProfile (./src/lib/queries/profile.ts:20:22)
+    at async Promise.all (index 1)
+    at async ProfilePage (profile/page.tsx:42:45)
+digest: "4079065811"
+[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
+[0m [90m 21 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
+[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
+[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
+[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
+[0m [90m 24 |[39m[0m
+[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m

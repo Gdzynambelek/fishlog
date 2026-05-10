@@ -7,7 +7,8 @@ import {
   Trophy,
 } from "lucide-react";
 import { getUser } from "@/utils/supabase/server";
-import { getStatsForUser } from "@/lib/stats";
+import { getMyProfile, resolveGreetingName } from "@/lib/queries/profile";
+import { getStatsForUser, getTopFish } from "@/lib/stats";
 import { recentTrips } from "@/lib/queries/trips";
 import { recentCatches } from "@/lib/queries/catches";
 import { formatWeight } from "@/lib/format";
@@ -16,19 +17,20 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { StatCard } from "@/components/cards/StatCard";
 import { TripCard } from "@/components/cards/TripCard";
 import { CatchCard } from "@/components/cards/CatchCard";
+import { TopFishCard } from "@/components/cards/TopFishCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function DashboardPage() {
-  const [user, stats, trips, catches] = await Promise.all([
+  const [user, profile, stats, topFish, trips, catches] = await Promise.all([
     getUser(),
+    getMyProfile(),
     getStatsForUser(),
+    getTopFish(3),
     recentTrips(3),
     recentCatches(3),
   ]);
 
-  const greeting = user?.user_metadata?.full_name
-    ? (user.user_metadata.full_name as string).split(" ")[0]
-    : user?.email?.split("@")[0] ?? "wędkarzu";
+  const greeting = resolveGreetingName(profile, user ?? {});
 
   return (
     <>
@@ -46,16 +48,8 @@ export default async function DashboardPage() {
       />
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard
-          label="Połowy"
-          value={stats.totalCatches}
-          icon={Fish}
-        />
-        <StatCard
-          label="Wyjazdy"
-          value={stats.totalTrips}
-          icon={CalendarDays}
-        />
+        <StatCard label="Połowy" value={stats.totalCatches} icon={Fish} />
+        <StatCard label="Wyjazdy" value={stats.totalTrips} icon={CalendarDays} />
         <StatCard
           label="Największa ryba"
           value={
@@ -72,6 +66,21 @@ export default async function DashboardPage() {
           icon={Sparkles}
         />
       </section>
+
+      {topFish.length > 0 ? (
+        <section className="mt-10 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Top {topFish.length} największe ryby
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            {topFish.map((fish, idx) => (
+              <TopFishCard key={fish.id} item={fish} rank={idx + 1} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="mt-10 space-y-4">
         <div className="flex items-center justify-between">

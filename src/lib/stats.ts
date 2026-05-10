@@ -87,6 +87,33 @@ export function computeTripStats(catches: Catch[]): TripStats {
   };
 }
 
+export interface TopFishItem {
+  id: string;
+  trip_id: string;
+  species: string;
+  weight_kg: number;
+  caught_at: string;
+  photo_url: string | null;
+}
+
+/**
+ * Top N heaviest fish — used in dashboard "Top X" section. Returns rows
+ * with `weight_kg` not null, ordered desc. Caller picks the limit.
+ */
+export async function getTopFish(limit = 3): Promise<TopFishItem[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("catches")
+    .select("id, trip_id, species, weight_kg, caught_at, photo_url")
+    .not("weight_kg", "is", null)
+    .order("weight_kg", { ascending: false, nullsFirst: false })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return (data ?? []).filter(
+    (r): r is TopFishItem => typeof r.weight_kg === "number",
+  );
+}
+
 export interface SpeciesRankItem {
   species: string;
   count: number;

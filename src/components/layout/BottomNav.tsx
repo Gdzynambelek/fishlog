@@ -9,7 +9,12 @@ import { NAV_ITEMS } from "./nav-items";
  * Routes where bottom nav should hide — focused forms whose own sticky
  * save bar would otherwise fight for the bottom of the screen.
  */
-const HIDDEN_ON = [/^\/trips\/new$/, /^\/trips\/[^/]+\/catch\/new$/];
+const HIDDEN_ON = [
+  /^\/trips\/new$/,
+  /^\/trips\/[^/]+\/edit$/,
+  /^\/trips\/[^/]+\/catch\/new$/,
+  /^\/trips\/[^/]+\/catch\/[^/]+\/edit$/,
+];
 
 /**
  * Mobile bottom nav. 4 items, 56px tall, safe-area-aware so the icons
