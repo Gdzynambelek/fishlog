@@ -121,7 +121,7 @@ export function CatchForm({ tripId }: { tripId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 pb-24"
+        className="space-y-4 pb-32 md:pb-4"
         noValidate
       >
         <Card className="space-y-4 p-5">
@@ -292,7 +292,9 @@ export function CatchForm({ tripId }: { tripId: string }) {
           />
         </Card>
 
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 p-3 backdrop-blur safe-area-pb md:static md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+        {/* Mobile: sit above the bottom-nav (z-40) by using z-50, so the
+            save action stays reachable. Desktop (md+): static, in-flow. */}
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.15)] backdrop-blur safe-area-pb md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
           <div className="container flex justify-end md:px-0">
             <Button
               type="submit"
