@@ -9,374 +9,52 @@ At line:1 char:1
     + CategoryInfo          : NotSpecified: ( ⚠ Self-signed ...e with caution.:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
-   Downloading mkcert package...
-   Download response was successful, writing to disk
    Attempting to generate self signed certificate. This may prompt for your password
    CA Root certificate created in C:\Users\tomasz.pyra\AppData\Local\mkcert
    Certificates created in C:\Projects\fishlog\certificates
-   Adding certificates to .gitignore
   ▲ Next.js 14.2.35
   - Local:        https://localhost:3000
   - Network:      http://0.0.0.0:3000
   - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 9.7s
+ ✓ Ready in 2.5s
  ○ Compiling /src/middleware ...
- ✓ Compiled /src/middleware in 994ms (127 modules)
- ○ Compiling /login ...
- ✓ Compiled /login in 17.1s (958 modules)
- GET /login?redirectedFrom=%2F 200 in 18346ms
- ✓ Compiled in 1400ms (467 modules)
- ✓ Compiled in 353ms (453 modules)
+ ✓ Compiled /src/middleware in 983ms (127 modules)
+ ○ Compiling /profile ...
+ ✓ Compiled /profile in 13s (2605 modules)
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+ ✓ Compiled in 1028ms (952 modules)
+ GET /profile 200 in 14414ms
+ ✓ Compiled in 518ms (938 modules)
  ⚠ Cross origin request detected from 192.168.1.7 to /_next/* resource. In a future major version of Next.js, you will 
 need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
- ○ Compiling / ...
- ✓ Compiled / in 1042ms (935 modules)
- ○ Compiling /dashboard ...
- ✓ Compiled /dashboard in 8.4s (1738 modules)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization performance 
 (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance 
 (consider using Buffer instead and decode when needed)
- GET /login?redirectedFrom=%2F 200 in 628ms
- ○ Compiling /favicon.ico ...
- ✓ Compiled /favicon.ico in 1013ms (1260 modules)
- GET /favicon.ico 200 in 1388ms
- ○ Compiling /trips/new ...
- ✓ Compiled /trips/new in 14.7s (3857 modules)
- ✓ Compiled in 2.5s (3819 modules)
- ✓ Compiled in 620ms (3819 modules)
- ✓ Compiled in 278ms (1557 modules)
- ⨯ SyntaxError: Unexpected end of JSON input
-    at JSON.parse (<anonymous>)
-    at loadManifest (C:\Projects\fishlog\node_modules\next\dist\server\load-manifest.js:36:25)
-    at DevServer.getNextFontManifest (C:\Projects\fishlog\node_modules\next\dist\server\next-server.js:750:47)
-    at DevServer.findPageComponents (C:\Projects\fishlog\node_modules\next\dist\server\dev\next-dev-server.js:571:43)
-    at async DevServer.renderPageComponent (C:\Projects\fishlog\node_modules\next\dist\server\base-server.js:1910:24)
-    at async DevServer.renderToResponseImpl (C:\Projects\fishlog\node_modules\next\dist\server\base-server.js:1962:32)
-    at async DevServer.pipeImpl (C:\Projects\fishlog\node_modules\next\dist\server\base-server.js:922:25)
-    at async NextNodeServer.handleCatchallRenderRequest 
-(C:\Projects\fishlog\node_modules\next\dist\server\next-server.js:272:17)
-    at async DevServer.handleRequestImpl (C:\Projects\fishlog\node_modules\next\dist\server\base-server.js:818:17)
-    at async C:\Projects\fishlog\node_modules\next\dist\server\dev\next-dev-server.js:339:20
-    at async Span.traceAsyncFn (C:\Projects\fishlog\node_modules\next\dist\trace\trace.js:154:20)
-    at async DevServer.handleRequest (C:\Projects\fishlog\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
-    at async invokeRender (C:\Projects\fishlog\node_modules\next\dist\server\lib\router-server.js:179:21)
-    at async handleRequest (C:\Projects\fishlog\node_modules\next\dist\server\lib\router-server.js:359:24)
-    at async requestHandlerImpl (C:\Projects\fishlog\node_modules\next\dist\server\lib\router-server.js:383:13)
-    at async Server.requestListener (C:\Projects\fishlog\node_modules\next\dist\server\lib\start-server.js:141:13) {
-  page: '/trips/new'
-}
- ○ Compiling /_error ...
- ✓ Compiled /_error in 1685ms (4031 modules)
- GET /trips/new 200 in 346ms
- ✓ Compiled in 373ms (1743 modules)
- ○ Compiling /trips/[id] ...
- ✓ Compiled /trips/[id] in 2.5s (4146 modules)
- ○ Compiling /trips/[id]/catch/new ...
- ✓ Compiled /trips/[id]/catch/new in 1829ms (4211 modules)
- ○ Compiling /catches ...
- ✓ Compiled /catches in 2.1s (4246 modules)
- ○ Compiling /profile ...
- ✓ Compiled /profile in 3.9s (5156 modules)
- ○ Compiling /_not-found ...
- ✓ Compiled /_not-found in 1914ms (4690 modules)
- GET /_next/undefined 404 in 2133ms
- GET /_next/undefined 404 in 53ms
- GET /dashboard 200 in 232ms
- GET /trips/new 200 in 312ms
- ✓ Compiled in 3.7s (4701 modules)
- ✓ Compiled in 1392ms (4701 modules)
- GET /trips/b3b74358-0a82-4ca1-b262-f4dee5069add/catch/new 200 in 755ms
- ✓ Compiled in 3.2s (4701 modules)
- GET /trips/b3b74358-0a82-4ca1-b262-f4dee5069add/catch/new 200 in 714ms
- ○ Compiling /profile ...
- ✓ Compiled /profile in 2.1s (2867 modules)
- ✓ Compiled in 1766ms (2858 modules)
- ✓ Compiled in 3.1s (5147 modules)
- ✓ Compiled in 1940ms (5147 modules)
- ✓ Compiled in 1091ms (2303 modules)
- ✓ Compiled in 2.5s (5172 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 406ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 849ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 894ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 426ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 741ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 1657ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 486ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+ GET /profile 200 in 232ms
  ○ Compiling /dashboard ...
- ✓ Compiled /dashboard in 2.2s (2876 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async DashboardPage (dashboard/page.tsx:43:61)
-digest: "1828089172"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async DashboardPage (dashboard/page.tsx:43:61)
-digest: "1828089172"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- GET /dashboard 200 in 3038ms
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 860ms (2307 modules)
- ✓ Compiled in 1026ms (2307 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async DashboardPage (dashboard/page.tsx:43:61)
-digest: "1828089172"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async DashboardPage (dashboard/page.tsx:43:61)
-digest: "1828089172"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 4.3s (4829 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 1541ms (4829 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
- ✓ Compiled in 634ms (2327 modules)
- ⨯ src\lib\queries\profile.ts (22:20) @ getMyProfile
- ⨯ Error: Failed to load profile: Could not find the table 'public.profiles' in the schema cache
-    at getMyProfile (./src/lib/queries/profile.ts:20:22)
-    at async Promise.all (index 1)
-    at async ProfilePage (profile/page.tsx:42:45)
-digest: "4079065811"
-[0m [90m 20 |[39m     [33m.[39mmaybeSingle()[33m;[39m[0m
-[0m [90m 21 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 22 |[39m   [36mif[39m (error) [36mthrow[39m [36mnew[39m 
-[33mError[39m([32m`Failed to load profile: ${error.message}`[39m)[33m;[39m[0m
-[0m [90m    |[39m                    [31m[1m^[22m[39m[0m
-[0m [90m 23 |[39m   [36mif[39m (data) [36mreturn[39m data[33m;[39m[0m
-[0m [90m 24 |[39m[0m
-[0m [90m 25 |[39m   [90m// Fallback — create on demand (trigger should have done this already).[39m[0m
+ ✓ Compiled /dashboard in 1166ms (2637 modules)
+ ○ Compiling /trips/[id] ...
+ ✓ Compiled /trips/[id] in 5.2s (4097 modules)
+ ○ Compiling /trips/[id]/edit ...
+ ✓ Compiled /trips/[id]/edit in 1720ms (4098 modules)
+ ○ Compiling /trips/[id]/catch/[catchId]/edit ...
+ ✓ Compiled /trips/[id]/catch/[catchId]/edit in 1545ms (4153 modules)
+ ○ Compiling /trips/[id]/catch/new ...
+ ✓ Compiled /trips/[id]/catch/new in 877ms (4160 modules)
+ ○ Compiling /catches ...
+ ✓ Compiled /catches in 2.2s (3721 modules)
+ ✓ Compiled in 12.5s (3694 modules)
+ ✓ Compiled in 1152ms (3694 modules)
+ ✓ Compiled in 1019ms (3694 modules)
+ ✓ Compiled in 21.6s (3710 modules)

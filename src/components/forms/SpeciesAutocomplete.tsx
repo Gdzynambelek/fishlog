@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Check, ChevronsUpDown, Lightbulb } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -12,15 +12,22 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { POPULAR_SPECIES_PL } from "@/lib/species";
+import {
+  POPULAR_SPECIES_PL,
+  suggestSpeciesCorrection,
+} from "@/lib/species";
 import { cn } from "@/lib/utils";
 
 /**
- * Combobox-style picker for fish species. The user can pick from a fixed
- * list of popular Polish species OR type a custom name (free text).
+ * Combobox-style picker for fish species.
  *
- * The "free text" path is important — every angler will eventually catch
- * something not on our list (or use a regional name).
+ * Behavior:
+ *  - Pick from the popular species list (substring match by cmdk).
+ *  - Type a custom name (free text) — accepted as-is.
+ *  - When the typed value looks like a typo of a known species (Levenshtein
+ *    fuzzy match), surface a "Może chodziło Ci o…" group with the canonical
+ *    name as a one-tap correction. The "Użyj wpisanego" entry stays — user
+ *    can override and keep their spelling.
  */
 export function SpeciesAutocomplete({
   value,
@@ -37,11 +44,24 @@ export function SpeciesAutocomplete({
   const [search, setSearch] = useState("");
 
   const trimmedSearch = search.trim();
-  const showCustom =
-    trimmedSearch.length >= 2 &&
-    !POPULAR_SPECIES_PL.some(
-      (s) => s.toLowerCase() === trimmedSearch.toLowerCase(),
-    );
+  const exactMatch = useMemo(
+    () =>
+      POPULAR_SPECIES_PL.some(
+        (s) => s.toLowerCase() === trimmedSearch.toLowerCase(),
+      ),
+    [trimmedSearch],
+  );
+  const suggestion = useMemo(
+    () => (exactMatch ? null : suggestSpeciesCorrection(trimmedSearch)),
+    [trimmedSearch, exactMatch],
+  );
+  const showCustom = trimmedSearch.length >= 2 && !exactMatch;
+
+  function pick(name: string) {
+    onChange(name);
+    setOpen(false);
+    setSearch("");
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -74,28 +94,45 @@ export function SpeciesAutocomplete({
           />
           <CommandList>
             <CommandEmpty>Brak wyników.</CommandEmpty>
-            {showCustom ? (
-              <CommandGroup heading="Użyj wpisanego">
+
+            {suggestion ? (
+              <CommandGroup heading="Może chodziło Ci o…">
                 <CommandItem
-                  value={trimmedSearch}
-                  onSelect={() => {
-                    onChange(trimmedSearch);
-                    setOpen(false);
-                  }}
+                  value={`__suggestion__:${suggestion}`}
+                  onSelect={() => pick(suggestion)}
+                  className="data-[selected=true]:bg-accent/30"
                 >
-                  &bdquo;{trimmedSearch}&rdquo;
+                  <Lightbulb className="mr-2 h-4 w-4 text-[hsl(41_73%_56%)]" />
+                  <span className="font-medium">{suggestion}</span>
+                  <span className="ml-2 text-xs text-muted-foreground">
+                    (poprawiona pisownia)
+                  </span>
                 </CommandItem>
               </CommandGroup>
             ) : null}
+
+            {showCustom ? (
+              <CommandGroup heading="Użyj wpisanego">
+                <CommandItem
+                  value={`__custom__:${trimmedSearch}`}
+                  onSelect={() => pick(trimmedSearch)}
+                >
+                  &bdquo;{trimmedSearch}&rdquo;
+                  {suggestion ? (
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      (zostaw moją pisownię)
+                    </span>
+                  ) : null}
+                </CommandItem>
+              </CommandGroup>
+            ) : null}
+
             <CommandGroup heading="Popularne gatunki">
               {POPULAR_SPECIES_PL.map((species) => (
                 <CommandItem
                   key={species}
                   value={species}
-                  onSelect={() => {
-                    onChange(species);
-                    setOpen(false);
-                  }}
+                  onSelect={() => pick(species)}
                 >
                   <Check
                     className={cn(
