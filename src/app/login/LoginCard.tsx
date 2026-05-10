@@ -104,11 +104,21 @@ export function LoginCard({
   }
 
   return (
-    <Card className="w-full max-w-md border-white/10 bg-white/5 p-6 text-foreground/95 shadow-2xl backdrop-blur">
+    <Card className="w-full max-w-md border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur [&_label]:text-white/90">
       <Tabs value={mode} onValueChange={(v) => setMode(v as Mode)}>
         <TabsList className="grid w-full grid-cols-2 bg-white/10">
-          <TabsTrigger value="signin">Zaloguj się</TabsTrigger>
-          <TabsTrigger value="signup">Utwórz konto</TabsTrigger>
+          <TabsTrigger
+            value="signin"
+            className="text-white/70 data-[state=active]:bg-white data-[state=active]:text-[hsl(168_38%_12%)]"
+          >
+            Zaloguj się
+          </TabsTrigger>
+          <TabsTrigger
+            value="signup"
+            className="text-white/70 data-[state=active]:bg-white data-[state=active]:text-[hsl(168_38%_12%)]"
+          >
+            Utwórz konto
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={mode} className="mt-5 space-y-4">
@@ -152,7 +162,7 @@ export function LoginCard({
                         autoComplete="email"
                         inputMode="email"
                         placeholder="ty@example.com"
-                        className="h-11"
+                        className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
                         {...field}
                       />
                     </FormControl>
@@ -174,7 +184,7 @@ export function LoginCard({
                             ? "current-password"
                             : "new-password"
                         }
-                        className="h-11"
+                        className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
                         {...field}
                       />
                     </FormControl>

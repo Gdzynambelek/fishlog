@@ -1,0 +1,40 @@
+﻿
+> fishlog@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 10.8s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 2.5s (127 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 23.7s (958 modules)
+ GET /login?redirectedFrom=%2F 200 in 28329ms
+ ✓ Compiled in 7.8s (467 modules)
+ ✓ Compiled in 2.1s (453 modules)
+ ○ Compiling /favicon.ico ...
+node.exe : <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization 
+performance (consider using Buffer instead and decode when needed)
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (<w> [webpack.ca...de when needed):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance 
+(consider using Buffer instead and decode when needed)
+ ✓ Compiled /favicon.ico in 11s (505 modules)
+ GET /favicon.ico 200 in 11425ms
+ GET /login?redirectedFrom=%2F 200 in 562ms
+ GET /login?redirectedFrom=%2F 200 in 79ms
+ GET /favicon.ico 200 in 25ms
+ GET /login?redirectedFrom=%2F 200 in 77ms
+ ✓ Compiled in 2s (940 modules)
+ ✓ Compiled in 869ms (940 modules)
+ ○ Compiling /auth/callback ...
+ ✓ Compiled /auth/callback in 3.3s (561 modules)
+ GET /auth/callback?code=8646ad95-25a6-4cf2-9823-27b052026eab 307 in 4051ms
+ ○ Compiling /dashboard ...
