@@ -89,3 +89,4 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /trips/new 200 in 312ms
  ✓ Compiled in 3.7s (4701 modules)
  ✓ Compiled in 1392ms (4701 modules)
+ GET /trips/b3b74358-0a82-4ca1-b262-f4dee5069add/catch/new 200 in 755ms
