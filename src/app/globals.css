@@ -2,26 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* FishLog palette — light theme.
+       primary = deep green #1a3c34, primary-hover = #2d6a4f, accent = gold #e9c46a,
+       background = cream #fefae0. HSL form for Tailwind v3 + shadcn convention. */
+    --background: 60 67% 94%;
+    --foreground: 168 38% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 168 38% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 168 38% 12%;
+
+    --primary: 168 38% 17%;
+    --primary-foreground: 60 67% 96%;
+
+    --secondary: 60 35% 88%;
+    --secondary-foreground: 168 38% 17%;
+
+    --muted: 60 25% 92%;
+    --muted-foreground: 168 12% 35%;
+
+    --accent: 41 73% 66%;
+    --accent-foreground: 168 38% 12%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 60 15% 85%;
+    --input: 60 15% 88%;
+    --ring: 152 41% 30%;
+
+    --radius: 0.75rem;
+
+    --chart-1: 152 41% 30%;
+    --chart-2: 41 73% 66%;
+    --chart-3: 168 38% 17%;
+    --chart-4: 25 65% 55%;
+    --chart-5: 195 45% 45%;
+  }
+
+  .dark {
+    --background: 168 38% 8%;
+    --foreground: 60 50% 95%;
+
+    --card: 168 38% 12%;
+    --card-foreground: 60 50% 95%;
+
+    --popover: 168 38% 12%;
+    --popover-foreground: 60 50% 95%;
+
+    --primary: 152 41% 45%;
+    --primary-foreground: 168 38% 8%;
+
+    --secondary: 168 30% 20%;
+    --secondary-foreground: 60 50% 95%;
+
+    --muted: 168 25% 18%;
+    --muted-foreground: 60 20% 70%;
+
+    --accent: 41 73% 66%;
+    --accent-foreground: 168 38% 8%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 168 25% 22%;
+    --input: 168 25% 22%;
+    --ring: 152 41% 45%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
