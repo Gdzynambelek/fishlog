@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎣 FishLog
 
-## Getting Started
+Responsywny serwis WWW dla wędkarzy — dziennik wyjazdów i połowów. Aplikacja po polsku, kod po angielsku.
 
-First, run the development server:
+**Stack:** Next.js 14 (App Router) · TypeScript · Tailwind CSS · shadcn/ui · Supabase (Postgres + Auth + Storage) · Leaflet + OpenStreetMap · Vercel.
 
+---
+
+## Funkcje
+
+- 🔐 Logowanie e-mail/hasło + Google OAuth (Supabase Auth)
+- 🗺️ Mapy łowisk z GPS (Leaflet) — działają mobile + desktop
+- 📷 Zdjęcia połowów z aparatu/galerii, automatyczna kompresja przed uploadem
+- 📊 Statystyki, filtry, wykres ranking gatunków (recharts)
+- 📱 Responsywne breakpointy: mobile / tablet / desktop (sidebar vs bottom nav)
+- 🛡️ Row Level Security w Supabase — każdy widzi tylko swoje dane
+
+## Wymagania (development)
+
+| Narzędzie    | Wersja      |
+|--------------|-------------|
+| Node.js      | ≥ 20 (LTS)  |
+| npm          | ≥ 10        |
+| Docker       | Desktop 4+  |
+| Supabase CLI | ≥ 2.0       |
+
+Sprawdź:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+node -v && docker --version && supabase --version
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Quick start (lokalnie)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# 1. Zainstaluj zależności
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 2. Wystartuj lokalny stack Supabase (Postgres + Auth + Studio + Storage)
+supabase start
 
-## Learn More
+# 3. Skopiuj URL i klucze do .env.local
+supabase status
+# Wpisz API URL → NEXT_PUBLIC_SUPABASE_URL
+#       anon key → NEXT_PUBLIC_SUPABASE_ANON_KEY
+#       service_role key → SUPABASE_SERVICE_ROLE_KEY
 
-To learn more about Next.js, take a look at the following resources:
+# 4. (Po zmianach w schemie) wygeneruj typy DB
+npx supabase gen types typescript --local > src/types/database.types.ts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 5. Odpal dev server
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Aplikacja: http://localhost:3000  
+Supabase Studio: http://127.0.0.1:54323  
+Inbucket (testowe e-maile): http://127.0.0.1:54324
 
-## Deploy on Vercel
+## Skrypty
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # dev server (Next.js)
+npm run build    # build produkcyjny
+npm run start    # serwowanie buildu
+npm run lint     # ESLint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Struktura
+
+```
+src/
+  app/
+    login/                  ← strona logowania (publiczna)
+    (app)/...               ← chronione widoki (dashboard, trips, catches, profile)
+    auth/callback/          ← OAuth code-exchange
+  components/
+    ui/                     ← shadcn primitives
+    layout/                 ← Shell, Sidebar, BottomNav, Fab, PageHeader
+    cards/                  ← TripCard, CatchCard, StatCard
+    forms/                  ← TripStepper, CatchForm, PhotoCapture, ...
+    maps/                   ← LocationPicker, StaticMap, MapThumbnail
+    catches/                ← Filters, Table, Grid, InfiniteCatches
+    charts/                 ← SpeciesPieChart
+  lib/
+    queries/                ← Supabase queries (server + client)
+    species.ts              ← stała lista gatunków PL
+    stats.ts                ← agregacje (largest fish, ranking)
+    storage.ts              ← upload zdjęć + kompresja
+    geolocation.ts          ← navigator.geolocation wrapper
+    validation.ts           ← schematy zod
+    format.ts               ← formatowanie dat/wagi/długości
+  utils/supabase/           ← klienci Supabase (client/server/middleware)
+  types/database.types.ts   ← typy generowane z migracji
+supabase/
+  migrations/               ← schema SQL + RLS + Storage policies
+  config.toml               ← konfiguracja CLI
+```
+
+## Deploy
+
+Patrz [DEPLOY.md](./DEPLOY.md).
+
+## Licencja
+
+Brak licencji publicznej (projekt prywatny).
