@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationPicker } from "@/components/maps/LocationPicker";
 
@@ -260,8 +261,8 @@ export function TripStepper() {
                     </FormItem>
                   )}
                 />
-                <FormItem>
-                  <FormLabel>Lokalizacja na mapie</FormLabel>
+                <div className="space-y-2">
+                  <Label>Lokalizacja na mapie</Label>
                   <LocationPicker
                     value={
                       form.watch("latitude") != null &&
@@ -281,7 +282,7 @@ export function TripStepper() {
                       });
                     }}
                   />
-                </FormItem>
+                </div>
               </motion.div>
             ) : null}
 

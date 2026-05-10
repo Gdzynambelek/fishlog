@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { LocationPicker } from "@/components/maps/LocationPicker";
@@ -221,12 +222,12 @@ export function CatchForm({ tripId }: { tripId: string }) {
         </Card>
 
         <Card className="space-y-3 p-5">
-          <FormLabel>Zdjęcie</FormLabel>
+          <Label>Zdjęcie</Label>
           <PhotoCapture file={photo} onChange={setPhoto} />
         </Card>
 
         <Card className="space-y-3 p-5">
-          <FormLabel>Lokalizacja złowienia (opcjonalna)</FormLabel>
+          <Label>Lokalizacja złowienia (opcjonalna)</Label>
           <LocationPicker
             value={
               form.watch("latitude") != null &&

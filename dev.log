@@ -1,40 +1,48 @@
 ﻿
-> fishlog@0.1.0 dev
-> next dev
+> fishlog@0.1.0 dev:lan
+> next dev -H 0.0.0.0 --experimental-https
 
-  ▲ Next.js 14.2.35
-  - Local:        http://localhost:3000
-  - Environments: .env.local
-
- ✓ Starting...
- ✓ Ready in 10.8s
- ○ Compiling /src/middleware ...
- ✓ Compiled /src/middleware in 2.5s (127 modules)
- ○ Compiling /login ...
- ✓ Compiled /login in 23.7s (958 modules)
- GET /login?redirectedFrom=%2F 200 in 28329ms
- ✓ Compiled in 7.8s (467 modules)
- ✓ Compiled in 2.1s (453 modules)
- ○ Compiling /favicon.ico ...
-node.exe : <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization 
-performance (consider using Buffer instead and decode when needed)
+node.exe :  ⚠ Self-signed certificates are currently an experimental feature, use with caution.
 At line:1 char:1
 + & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (<w> [webpack.ca...de when needed):String) [], RemoteException
+    + CategoryInfo          : NotSpecified: ( ⚠ Self-signed ...e with caution.:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
+   Downloading mkcert package...
+   Download response was successful, writing to disk
+   Attempting to generate self signed certificate. This may prompt for your password
+   CA Root certificate created in C:\Users\tomasz.pyra\AppData\Local\mkcert
+   Certificates created in C:\Projects\fishlog\certificates
+   Adding certificates to .gitignore
+  ▲ Next.js 14.2.35
+  - Local:        https://localhost:3000
+  - Network:      http://0.0.0.0:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 9.7s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 994ms (127 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 17.1s (958 modules)
+ GET /login?redirectedFrom=%2F 200 in 18346ms
+ ✓ Compiled in 1400ms (467 modules)
+ ✓ Compiled in 353ms (453 modules)
+ ⚠ Cross origin request detected from 192.168.1.7 to /_next/* resource. In a future major version of Next.js, you will 
+need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling / ...
+ ✓ Compiled / in 1042ms (935 modules)
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 8.4s (1738 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (101kiB) impacts deserialization performance 
+(consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (231kiB) impacts deserialization performance 
 (consider using Buffer instead and decode when needed)
- ✓ Compiled /favicon.ico in 11s (505 modules)
- GET /favicon.ico 200 in 11425ms
- GET /login?redirectedFrom=%2F 200 in 562ms
- GET /login?redirectedFrom=%2F 200 in 79ms
- GET /favicon.ico 200 in 25ms
- GET /login?redirectedFrom=%2F 200 in 77ms
- ✓ Compiled in 2s (940 modules)
- ✓ Compiled in 869ms (940 modules)
- ○ Compiling /auth/callback ...
- ✓ Compiled /auth/callback in 3.3s (561 modules)
- GET /auth/callback?code=8646ad95-25a6-4cf2-9823-27b052026eab 307 in 4051ms
- ○ Compiling /dashboard ...
+ GET /login?redirectedFrom=%2F 200 in 628ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 1013ms (1260 modules)
+ GET /favicon.ico 200 in 1388ms
+ ○ Compiling /trips/new ...
+ ✓ Compiled /trips/new in 14.7s (3857 modules)
