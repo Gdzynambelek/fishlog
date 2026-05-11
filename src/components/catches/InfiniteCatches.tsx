@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { CatchCard } from "@/components/cards/CatchCard";
@@ -8,11 +9,6 @@ import { CatchesTable } from "./CatchesTable";
 import type { CatchWithTripName } from "@/lib/queries/catches";
 import { fetchMoreCatches } from "@/lib/queries/catches.client";
 
-/**
- * Renders the initial catches (server-fetched) and lazy-loads more pages
- * as the sentinel scrolls into view. Switches between table (md+) and
- * card grid (<md) layout via Tailwind responsive utilities.
- */
 export function InfiniteCatches({
   initial,
   initialHasMore,
@@ -20,6 +16,7 @@ export function InfiniteCatches({
   initial: CatchWithTripName[];
   initialHasMore: boolean;
 }) {
+  const t = useTranslations();
   const params = useSearchParams();
   const [items, setItems] = useState(initial);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -27,8 +24,6 @@ export function InfiniteCatches({
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const pageRef = useRef(1);
 
-  // Reset pagination when filter params change — the server-rendered
-  // `initial` already reflects the new filters.
   const filterKey = params.toString();
   useEffect(() => {
     setItems(initial);
@@ -85,7 +80,7 @@ export function InfiniteCatches({
           {loading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
-            <span className="text-xs">Przewijaj, by załadować więcej…</span>
+            <span className="text-xs">{t("catches.loadMore")}</span>
           )}
         </div>
       ) : null}

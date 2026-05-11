@@ -1,16 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { Fish } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDateTime, formatLength, formatWeight } from "@/lib/format";
 import type { CatchWithTripName } from "@/lib/queries/catches";
 
-/**
- * Catch card with photo (or fish-icon placeholder), species, weight, length,
- * date, and the parent trip name. Links to the trip detail page.
- */
 export function CatchCard({ item }: { item: CatchWithTripName }) {
+  const t = useTranslations();
+  const locale = useLocale();
   return (
     <Link
       href={`/trips/${item.trip_id}`}
@@ -36,7 +35,7 @@ export function CatchCard({ item }: { item: CatchWithTripName }) {
               variant="secondary"
               className="absolute right-2 top-2 bg-background/90 backdrop-blur"
             >
-              Wypuszczona
+              {t("catches.released")}
             </Badge>
           ) : null}
         </div>
@@ -51,12 +50,12 @@ export function CatchCard({ item }: { item: CatchWithTripName }) {
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>{formatLength(item.length_cm)}</span>
             <time dateTime={item.caught_at}>
-              {formatDateTime(item.caught_at)}
+              {formatDateTime(item.caught_at, locale)}
             </time>
           </div>
           {item.trip_name ? (
             <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">
-              Wyjazd: {item.trip_name}
+              {t("catches.tripLabel", { name: item.trip_name })}
             </p>
           ) : null}
         </div>

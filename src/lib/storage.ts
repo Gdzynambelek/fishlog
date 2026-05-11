@@ -11,8 +11,9 @@ const MAX_DIM = 1920;
  * Compresses a photo (≤1MB / 1920px) and uploads to the catches-photos
  * bucket under `{user_id}/{trip_id}/{uuid}.jpg`. Returns the public URL.
  *
- * Compression matters: phones easily produce 5–10MB JPEGs. Without this
- * we'd burn the Supabase free tier in days.
+ * Error messages here intentionally stay in English; callers re-wrap with
+ * localized toast text (we don't import `useTranslations` here because this
+ * module is also called from non-React contexts).
  */
 export async function uploadCatchPhoto(
   file: File,
@@ -24,7 +25,7 @@ export async function uploadCatchPhoto(
     error: userErr,
   } = await supabase.auth.getUser();
   if (userErr || !user) {
-    throw new Error("Musisz być zalogowany, by przesłać zdjęcie.");
+    throw new Error("Auth required");
   }
 
   const compressed = await imageCompression(file, {
@@ -45,7 +46,7 @@ export async function uploadCatchPhoto(
       contentType: "image/jpeg",
     });
   if (uploadErr) {
-    throw new Error(`Nie udało się przesłać zdjęcia: ${uploadErr.message}`);
+    throw new Error(uploadErr.message);
   }
 
   const {
@@ -54,10 +55,6 @@ export async function uploadCatchPhoto(
   return publicUrl;
 }
 
-/**
- * Best-effort cleanup. Used when the catch save fails after the photo
- * already uploaded — orphan photos waste storage. Failure here is non-fatal.
- */
 export async function deleteCatchPhotoByUrl(url: string): Promise<void> {
   try {
     const supabase = createClient();
@@ -65,7 +62,7 @@ export async function deleteCatchPhotoByUrl(url: string): Promise<void> {
     if (!path) return;
     await supabase.storage.from(BUCKET).remove([path]);
   } catch {
-    // Swallow — deletion best-effort.
+    // best-effort
   }
 }
 
@@ -87,20 +84,15 @@ export interface UploadedAttachment {
   mimeType: string;
 }
 
-/**
- * Uploads a PDF (e.g. fishing permit) to the private trip-attachments bucket
- * under `{user_id}/{trip_id}/{uuid}.pdf`. Returns metadata for the caller to
- * insert a row in `trip_attachments`.
- */
 export async function uploadTripAttachment(
   file: File,
   tripId: string,
 ): Promise<UploadedAttachment> {
   if (!ALLOWED_ATTACHMENT_MIME.includes(file.type)) {
-    throw new Error("Tylko pliki PDF są dozwolone.");
+    throw new Error("Only PDF allowed");
   }
   if (file.size > MAX_ATTACHMENT_SIZE_MB * 1024 * 1024) {
-    throw new Error(`Plik za duży (max ${MAX_ATTACHMENT_SIZE_MB} MB).`);
+    throw new Error(`File too large (max ${MAX_ATTACHMENT_SIZE_MB} MB)`);
   }
 
   const supabase = createClient();
@@ -109,7 +101,7 @@ export async function uploadTripAttachment(
     error: userErr,
   } = await supabase.auth.getUser();
   if (userErr || !user) {
-    throw new Error("Musisz być zalogowany, by dodać załącznik.");
+    throw new Error("Auth required");
   }
 
   const filePath = `${user.id}/${tripId}/${crypto.randomUUID()}.pdf`;
@@ -121,7 +113,7 @@ export async function uploadTripAttachment(
       contentType: "application/pdf",
     });
   if (uploadErr) {
-    throw new Error(`Upload nie powiódł się: ${uploadErr.message}`);
+    throw new Error(uploadErr.message);
   }
 
   return {
@@ -132,12 +124,11 @@ export async function uploadTripAttachment(
   };
 }
 
-/** Removes an attachment file from Storage (best-effort). */
 export async function deleteAttachmentFile(filePath: string): Promise<void> {
   try {
     const supabase = createClient();
     await supabase.storage.from(ATTACHMENTS_BUCKET).remove([filePath]);
   } catch {
-    // Best-effort.
+    // best-effort
   }
 }

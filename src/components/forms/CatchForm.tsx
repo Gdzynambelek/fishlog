@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { catchSchema, type CatchFormValues } from "@/lib/validation";
+import { useCatchSchema, type CatchFormValues } from "@/lib/validation";
 import {
   fromDatetimeLocalValue,
   toDatetimeLocalValue,
@@ -34,18 +35,16 @@ import { LocationPicker } from "@/components/maps/LocationPicker";
 import { SpeciesAutocomplete } from "./SpeciesAutocomplete";
 import { PhotoCapture } from "./PhotoCapture";
 
-/**
- * Single-page catch form. Sticky bottom action bar on mobile so the save
- * button is always reachable while editing.
- */
 export function CatchForm({ tripId }: { tripId: string }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useCatchSchema();
   const [photo, setPhoto] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<CatchFormValues>({
-    resolver: zodResolver(catchSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       species: "",
       weight_kg: null,
@@ -69,7 +68,7 @@ export function CatchForm({ tripId }: { tripId: string }) {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Sesja wygasła. Zaloguj się ponownie.");
+        toast.error(t("errors.sessionExpired"));
         router.replace("/login");
         return;
       }
@@ -78,7 +77,7 @@ export function CatchForm({ tripId }: { tripId: string }) {
         try {
           uploadedUrl = await uploadCatchPhoto(photo, tripId);
         } catch (err) {
-          toast.error("Nie udało się przesłać zdjęcia.", {
+          toast.error(t("photo.uploadFailed"), {
             description: err instanceof Error ? err.message : undefined,
           });
           return;
@@ -101,15 +100,14 @@ export function CatchForm({ tripId }: { tripId: string }) {
 
       const { error } = await supabase.from("catches").insert(insert);
       if (error) {
-        // Clean up the orphan photo we just uploaded.
         if (uploadedUrl) await deleteCatchPhotoByUrl(uploadedUrl);
-        toast.error("Nie udało się zapisać połowu.", {
+        toast.error(t("catches.saveFailed"), {
           description: error.message,
         });
         return;
       }
 
-      toast.success("Połów zapisany.");
+      toast.success(t("catches.saved"));
       router.replace(`/trips/${tripId}`);
       router.refresh();
     } finally {
@@ -130,7 +128,7 @@ export function CatchForm({ tripId }: { tripId: string }) {
             name="species"
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Gatunek</FormLabel>
+                <FormLabel>{t("catches.fields.species")}</FormLabel>
                 <FormControl>
                   <SpeciesAutocomplete
                     value={field.value}
@@ -149,14 +147,14 @@ export function CatchForm({ tripId }: { tripId: string }) {
               name="weight_kg"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Waga (kg)</FormLabel>
+                  <FormLabel>{t("catches.fields.weightKg")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       step={0.05}
                       min={0}
                       inputMode="decimal"
-                      placeholder="np. 2.45"
+                      placeholder="2.45"
                       className="h-12"
                       value={field.value ?? ""}
                       onChange={(e) => {
@@ -177,14 +175,14 @@ export function CatchForm({ tripId }: { tripId: string }) {
               name="length_cm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Długość (cm)</FormLabel>
+                  <FormLabel>{t("catches.fields.lengthCm")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       step={0.5}
                       min={0}
                       inputMode="decimal"
-                      placeholder="np. 42"
+                      placeholder="42"
                       className="h-12"
                       value={field.value ?? ""}
                       onChange={(e) => {
@@ -207,13 +205,9 @@ export function CatchForm({ tripId }: { tripId: string }) {
             name="caught_at"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Data i czas złowienia</FormLabel>
+                <FormLabel>{t("catches.fields.caughtAt")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="datetime-local"
-                    className="h-12"
-                    {...field}
-                  />
+                  <Input type="datetime-local" className="h-12" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -222,12 +216,12 @@ export function CatchForm({ tripId }: { tripId: string }) {
         </Card>
 
         <Card className="space-y-3 p-5">
-          <Label>Zdjęcie</Label>
+          <Label>{t("catches.fields.photo")}</Label>
           <PhotoCapture file={photo} onChange={setPhoto} />
         </Card>
 
         <Card className="space-y-3 p-5">
-          <Label>Lokalizacja złowienia (opcjonalna)</Label>
+          <Label>{t("catches.fields.locationOptional")}</Label>
           <LocationPicker
             value={
               form.watch("latitude") != null &&
@@ -240,9 +234,11 @@ export function CatchForm({ tripId }: { tripId: string }) {
             }
             onChange={({ latitude, longitude }) => {
               form.setValue("latitude", latitude, { shouldValidate: true });
-              form.setValue("longitude", longitude, { shouldValidate: true });
+              form.setValue("longitude", longitude, {
+                shouldValidate: true,
+              });
             }}
-            description="Możesz wskazać dokładne miejsce, jeśli różni się od łowiska."
+            description={t("catches.fields.locationHint")}
           />
         </Card>
 
@@ -253,16 +249,18 @@ export function CatchForm({ tripId }: { tripId: string }) {
             render={({ field }) => (
               <FormItem className="flex items-center justify-between rounded-xl border border-border p-3">
                 <div>
-                  <FormLabel className="text-base">Wypuszczona?</FormLabel>
+                  <FormLabel className="text-base">
+                    {t("catches.fields.released")}
+                  </FormLabel>
                   <p className="text-xs text-muted-foreground">
-                    Zaznacz, jeśli ryba wróciła do wody.
+                    {t("catches.fields.releasedHint")}
                   </p>
                 </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Wypuszczona"
+                    aria-label={t("catches.fields.released")}
                   />
                 </FormControl>
               </FormItem>
@@ -274,10 +272,10 @@ export function CatchForm({ tripId }: { tripId: string }) {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notatki</FormLabel>
+                <FormLabel>{t("catches.fields.notes")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Przynęta, technika, warunki…"
+                    placeholder={t("catches.fields.notesPlaceholder")}
                     rows={4}
                     value={field.value ?? ""}
                     onChange={field.onChange}
@@ -292,8 +290,6 @@ export function CatchForm({ tripId }: { tripId: string }) {
           />
         </Card>
 
-        {/* Mobile: sit above the bottom-nav (z-40) by using z-50, so the
-            save action stays reachable. Desktop (md+): static, in-flow. */}
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 shadow-[0_-4px_16px_-8px_rgba(0,0,0,0.15)] backdrop-blur safe-area-pb md:static md:border-0 md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none">
           <div className="container flex justify-end md:px-0">
             <Button
@@ -307,7 +303,7 @@ export function CatchForm({ tripId }: { tripId: string }) {
               ) : (
                 <Save className="mr-1.5 h-4 w-4" />
               )}
-              Zapisz połów
+              {t("common.save")}
             </Button>
           </div>
         </div>

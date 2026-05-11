@@ -1,8 +1,11 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
-      // Local Supabase Storage (dev).
       {
         protocol: "http",
         hostname: "127.0.0.1",
@@ -15,7 +18,6 @@ const nextConfig = {
         port: "54321",
         pathname: "/storage/v1/object/public/**",
       },
-      // Supabase Cloud (prod) — any *.supabase.co project.
       {
         protocol: "https",
         hostname: "*.supabase.co",
@@ -24,9 +26,8 @@ const nextConfig = {
     ],
   },
   experimental: {
-    // Improves bundle for icon library.
     optimizePackageImports: ["lucide-react"],
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

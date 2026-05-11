@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { tripSchema, type TripFormValues } from "@/lib/validation";
+import { useTripSchema, type TripFormValues } from "@/lib/validation";
 import {
   fromDatetimeLocalValue,
   toDatetimeLocalValue,
@@ -28,17 +29,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationPicker } from "@/components/maps/LocationPicker";
 
-/**
- * Single-page edit form. Pre-fills from existing trip; uses the same zod
- * schema as the stepper used for creation, so validation rules match.
- */
 export function TripEditForm({ trip }: { trip: Trip }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useTripSchema();
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<TripFormValues>({
-    resolver: zodResolver(tripSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: trip.name,
       location_name: trip.location_name ?? "",
@@ -74,12 +73,12 @@ export function TripEditForm({ trip }: { trip: Trip }) {
         .update(update)
         .eq("id", trip.id);
       if (error) {
-        toast.error("Nie udało się zapisać zmian.", {
+        toast.error(t("catches.updateFailed"), {
           description: error.message,
         });
         return;
       }
-      toast.success("Wyjazd zaktualizowany.");
+      toast.success(t("trips.updated"));
       router.replace(`/trips/${trip.id}`);
       router.refresh();
     } finally {
@@ -100,7 +99,7 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nazwa wyjazdu</FormLabel>
+                <FormLabel>{t("trips.fields.name")}</FormLabel>
                 <FormControl>
                   <Input className="h-12" {...field} />
                 </FormControl>
@@ -114,13 +113,9 @@ export function TripEditForm({ trip }: { trip: Trip }) {
               name="started_at"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Rozpoczęcie</FormLabel>
+                  <FormLabel>{t("trips.fields.started")}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="datetime-local"
-                      className="h-12"
-                      {...field}
-                    />
+                    <Input type="datetime-local" className="h-12" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,7 +126,9 @@ export function TripEditForm({ trip }: { trip: Trip }) {
               name="ended_at"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Zakończenie (opcjonalne)</FormLabel>
+                  <FormLabel>
+                    {t("trips.fields.ended")} {t("common.optional")}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="datetime-local"
@@ -156,11 +153,11 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             name="location_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Opis miejsca</FormLabel>
+                <FormLabel>{t("trips.fields.locationName")}</FormLabel>
                 <FormControl>
                   <Input
                     className="h-12"
-                    placeholder="np. Jeziorko za lasem"
+                    placeholder={t("trips.fields.locationNamePlaceholder")}
                     value={field.value ?? ""}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -173,7 +170,7 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             )}
           />
           <div className="space-y-2">
-            <Label>Lokalizacja na mapie</Label>
+            <Label>{t("trips.fields.mapLocation")}</Label>
             <LocationPicker
               value={
                 form.watch("latitude") != null &&
@@ -200,11 +197,11 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             name="weather"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Pogoda</FormLabel>
+                <FormLabel>{t("trips.fields.weather")}</FormLabel>
                 <FormControl>
                   <Input
                     className="h-12"
-                    placeholder="np. Słonecznie, 18°C"
+                    placeholder={t("trips.fields.weatherPlaceholder")}
                     value={field.value ?? ""}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -221,7 +218,7 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notatki</FormLabel>
+                <FormLabel>{t("trips.fields.notes")}</FormLabel>
                 <FormControl>
                   <Textarea
                     rows={5}
@@ -245,7 +242,7 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             onClick={() => router.back()}
             disabled={submitting}
           >
-            Anuluj
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={submitting}>
             {submitting ? (
@@ -253,7 +250,7 @@ export function TripEditForm({ trip }: { trip: Trip }) {
             ) : (
               <Save className="mr-1.5 h-4 w-4" />
             )}
-            Zapisz zmiany
+            {t("common.saveChanges")}
           </Button>
         </div>
       </form>

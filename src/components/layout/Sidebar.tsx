@@ -3,6 +3,7 @@
 import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
@@ -10,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NAV_ITEMS } from "./nav-items";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function Sidebar({
   user,
@@ -18,13 +20,14 @@ export function Sidebar({
   user: User;
   className?: string;
 }) {
+  const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
 
   async function logout() {
     await supabase.auth.signOut();
-    toast.success("Wylogowano. Do zobaczenia!");
+    toast.success(t("auth.loggedOut"));
     router.replace("/login");
     router.refresh();
   }
@@ -44,22 +47,22 @@ export function Sidebar({
       >
         <span className="text-2xl">🎣</span>
         <span className="hidden text-lg font-semibold tracking-tight lg:inline">
-          FishLog
+          {t("app.name")}
         </span>
       </Link>
 
       <nav className="flex-1 space-y-1 px-2">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
           const active =
             pathname === href || pathname.startsWith(`${href}/`);
+          const label = t(`nav.${labelKey}`);
           return (
             <Link
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-                "lg:px-3",
+                "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors lg:px-3",
                 active
                   ? "bg-primary text-primary-foreground"
                   : "text-foreground/80 hover:bg-muted hover:text-foreground",
@@ -73,7 +76,10 @@ export function Sidebar({
         })}
       </nav>
 
-      <div className="border-t border-border p-2 lg:p-3">
+      <div className="space-y-1 border-t border-border p-2 lg:p-3">
+        <div className="hidden justify-end lg:flex">
+          <LocaleSwitcher />
+        </div>
         <div className="flex items-center gap-2 rounded-md px-2 py-2 lg:gap-3">
           <Avatar className="h-8 w-8">
             {display.avatarUrl ? (
@@ -93,7 +99,7 @@ export function Sidebar({
             variant="ghost"
             size="icon"
             onClick={logout}
-            aria-label="Wyloguj się"
+            aria-label={t("auth.logout")}
             className="lg:ml-auto"
           >
             <LogOut className="h-4 w-4" />
@@ -109,7 +115,7 @@ function displayInfo(user: User) {
     (user.user_metadata?.full_name as string | undefined) ??
     (user.user_metadata?.name as string | undefined) ??
     user.email?.split("@")[0] ??
-    "Użytkownik";
+    "User";
   const avatarUrl =
     (user.user_metadata?.avatar_url as string | undefined) ??
     (user.user_metadata?.picture as string | undefined) ??

@@ -1,14 +1,19 @@
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TripStepper } from "@/components/forms/TripStepper";
 
-export const metadata = { title: "Nowy wyjazd" };
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return { title: t("trips.newTitle") };
+}
 
-export default function NewTripPage() {
+export default async function NewTripPage() {
+  const t = await getTranslations();
   return (
     <>
       <PageHeader
-        title="Nowy wyjazd"
-        description="Zarejestruj swój kolejny wypad nad wodę."
+        title={t("trips.newTitle")}
+        description={t("trips.newDescription")}
       />
       <div className="mx-auto max-w-2xl">
         <TripStepper />

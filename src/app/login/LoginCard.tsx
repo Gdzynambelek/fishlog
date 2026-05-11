@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
-import { loginSchema, type LoginFormValues } from "@/lib/validation";
+import { useLoginSchema, type LoginFormValues } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -31,20 +32,22 @@ export function LoginCard({
   oauthError?: boolean;
   redirectedFrom?: string;
 }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useLoginSchema();
   const [mode, setMode] = useState<Mode>("signin");
   const [submitting, setSubmitting] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
 
   useEffect(() => {
     if (oauthError) {
-      toast.error("Logowanie przez Google nie powiodło się. Spróbuj ponownie.");
+      toast.error(t("auth.oauthFailed"));
     }
-  }, [oauthError]);
+  }, [oauthError, t]);
 
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: "", password: "" },
   });
 
@@ -54,12 +57,12 @@ export function LoginCard({
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword(values);
         if (error) {
-          toast.error("Nie udało się zalogować.", {
-            description: humanizeAuthError(error.message),
+          toast.error(t("auth.signInFailed"), {
+            description: humanize(error.message, t),
           });
           return;
         }
-        toast.success("Zalogowano. Witaj z powrotem!");
+        toast.success(t("auth.signedIn"));
         router.replace(redirectedFrom ?? "/dashboard");
         router.refresh();
       } else {
@@ -71,13 +74,13 @@ export function LoginCard({
           },
         });
         if (error) {
-          toast.error("Nie udało się utworzyć konta.", {
-            description: humanizeAuthError(error.message),
+          toast.error(t("auth.signUpFailed"), {
+            description: humanize(error.message, t),
           });
           return;
         }
-        toast.success("Konto utworzone!", {
-          description: "Sprawdź skrzynkę e-mail i potwierdź adres.",
+        toast.success(t("auth.accountCreated"), {
+          description: t("auth.accountCreatedDescription"),
         });
         setMode("signin");
       }
@@ -96,11 +99,8 @@ export function LoginCard({
     });
     if (error) {
       setOauthLoading(false);
-      toast.error("Logowanie przez Google nie powiodło się.", {
-        description: error.message,
-      });
+      toast.error(t("auth.oauthFailed"), { description: error.message });
     }
-    // On success the browser is redirected by Supabase; loading state stays.
   }
 
   return (
@@ -111,13 +111,13 @@ export function LoginCard({
             value="signin"
             className="text-white/70 data-[state=active]:bg-white data-[state=active]:text-[hsl(168_38%_12%)]"
           >
-            Zaloguj się
+            {t("auth.signIn")}
           </TabsTrigger>
           <TabsTrigger
             value="signup"
             className="text-white/70 data-[state=active]:bg-white data-[state=active]:text-[hsl(168_38%_12%)]"
           >
-            Utwórz konto
+            {t("auth.signUp")}
           </TabsTrigger>
         </TabsList>
 
@@ -135,12 +135,12 @@ export function LoginCard({
             ) : (
               <GoogleIcon className="mr-2 h-4 w-4" />
             )}
-            Kontynuuj przez Google
+            {t("auth.continueWithGoogle")}
           </Button>
 
           <div className="flex items-center gap-2 text-xs text-white/60">
             <Separator className="flex-1 bg-white/15" />
-            lub przez e-mail
+            {t("auth.orWithEmail")}
             <Separator className="flex-1 bg-white/15" />
           </div>
 
@@ -155,13 +155,13 @@ export function LoginCard({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-mail</FormLabel>
+                    <FormLabel>{t("auth.email")}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
                         autoComplete="email"
                         inputMode="email"
-                        placeholder="ty@example.com"
+                        placeholder={t("auth.emailPlaceholder")}
                         className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
                         {...field}
                       />
@@ -175,7 +175,7 @@ export function LoginCard({
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hasło</FormLabel>
+                    <FormLabel>{t("auth.password")}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -199,7 +199,7 @@ export function LoginCard({
                 disabled={submitting || oauthLoading}
               >
                 {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {mode === "signin" ? "Zaloguj się" : "Utwórz konto"}
+                {mode === "signin" ? t("auth.signIn") : t("auth.signUp")}
               </Button>
             </form>
           </Form>
@@ -209,13 +209,13 @@ export function LoginCard({
   );
 }
 
-function humanizeAuthError(msg: string): string {
+function humanize(msg: string, t: (key: string) => string): string {
   const lower = msg.toLowerCase();
-  if (lower.includes("invalid login")) return "Nieprawidłowy e-mail lub hasło.";
+  if (lower.includes("invalid login")) return t("auth.errorInvalidCredentials");
   if (lower.includes("email not confirmed"))
-    return "Adres e-mail nie został potwierdzony.";
+    return t("auth.errorEmailNotConfirmed");
   if (lower.includes("user already registered"))
-    return "Konto z tym adresem już istnieje. Spróbuj się zalogować.";
+    return t("auth.errorUserAlreadyRegistered");
   return msg;
 }
 

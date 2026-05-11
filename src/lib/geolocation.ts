@@ -1,11 +1,12 @@
 /**
  * Promise wrapper around `navigator.geolocation.getCurrentPosition` with
- * Polish error messages and sensible defaults.
+ * localized error messages. Caller passes a `t` translator (typically from
+ * `useTranslations()`) — keeps this lib UI-framework agnostic but i18n-aware.
  *
  * Browser quirks:
  *  - iOS Safari requires HTTPS for geolocation (Vercel provides this).
- *  - `enableHighAccuracy: true` is necessary for good fishing-spot precision
- *    but uses GPS hardware; fall back gracefully if it times out.
+ *  - `enableHighAccuracy: true` is necessary for fishing-spot precision but
+ *    uses GPS hardware; fall back gracefully if it times out.
  */
 
 export type Coordinates = { latitude: number; longitude: number };
@@ -21,13 +22,14 @@ export class GeolocationError extends Error {
 
 const TIMEOUT_MS = 10_000;
 
-export function getCurrentPosition(): Promise<Coordinates> {
+type Translator = (key: string) => string;
+
+export function getCurrentPosition(t?: Translator): Promise<Coordinates> {
+  const tr = t ?? ((k: string) => k);
+
   if (typeof window === "undefined" || !("geolocation" in navigator)) {
     return Promise.reject(
-      new GeolocationError(
-        -1,
-        "Twoja przeglądarka nie obsługuje geolokalizacji.",
-      ),
+      new GeolocationError(-1, tr("map.gpsUnsupported")),
     );
   }
 
@@ -38,30 +40,24 @@ export function getCurrentPosition(): Promise<Coordinates> {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
         }),
-      (err) => reject(translateError(err)),
+      (err) => reject(translateError(err, tr)),
       { enableHighAccuracy: true, timeout: TIMEOUT_MS, maximumAge: 30_000 },
     );
   });
 }
 
-function translateError(err: GeolocationPositionError): GeolocationError {
+function translateError(
+  err: GeolocationPositionError,
+  t: Translator,
+): GeolocationError {
   switch (err.code) {
     case err.PERMISSION_DENIED:
-      return new GeolocationError(
-        err.code,
-        "Brak zgody na dostęp do lokalizacji. Włącz dostęp w ustawieniach przeglądarki.",
-      );
+      return new GeolocationError(err.code, t("map.gpsDenied"));
     case err.POSITION_UNAVAILABLE:
-      return new GeolocationError(
-        err.code,
-        "Nie udało się ustalić Twojej lokalizacji. Spróbuj ponownie lub kliknij na mapie.",
-      );
+      return new GeolocationError(err.code, t("map.gpsUnavailable"));
     case err.TIMEOUT:
-      return new GeolocationError(
-        err.code,
-        "Przekroczono limit czasu pobierania lokalizacji.",
-      );
+      return new GeolocationError(err.code, t("map.gpsTimeout"));
     default:
-      return new GeolocationError(err.code, "Nieznany błąd geolokalizacji.");
+      return new GeolocationError(err.code, t("map.gpsError"));
   }
 }

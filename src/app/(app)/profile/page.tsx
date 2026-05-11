@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import {
   CalendarDays,
   Fish,
@@ -15,12 +16,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/cards/StatCard";
 import { SpeciesPieChart } from "@/components/charts/SpeciesPieChart";
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { LogoutButton } from "./LogoutButton";
 import { PermitLinksList, ProfileForm } from "./ProfileForm";
 
-export const metadata = { title: "Profil" };
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return { title: t("profile.title") };
+}
 
 export default async function ProfilePage() {
+  const t = await getTranslations();
   const [user, profile, stats, ranking] = await Promise.all([
     getUser(),
     getMyProfile(),
@@ -46,7 +52,10 @@ export default async function ProfilePage() {
 
   return (
     <>
-      <PageHeader title="Profil" />
+      <PageHeader
+        title={t("profile.title")}
+        actions={<LocaleSwitcher variant="labeled" />}
+      />
 
       <Card className="flex flex-col items-center gap-4 p-6 sm:flex-row sm:items-center sm:gap-6">
         <Avatar className="h-20 w-20">
@@ -61,29 +70,29 @@ export default async function ProfilePage() {
           {profile?.fishing_license ? (
             <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
               <IdCard className="h-3.5 w-3.5" aria-hidden />
-              Karta wędkarska: {profile.fishing_license}
+              {t("profile.fishingLicense", { value: profile.fishing_license })}
             </p>
           ) : null}
         </div>
         <LogoutButton>
           <LogOut className="mr-1.5 h-4 w-4" />
-          Wyloguj się
+          {t("auth.logout")}
         </LogoutButton>
       </Card>
 
       <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
-          label="Wszystkich połowów"
+          label={t("dashboard.totalCatches")}
           value={stats.totalCatches}
           icon={Fish}
         />
         <StatCard
-          label="Wyjazdów"
+          label={t("dashboard.totalTrips")}
           value={stats.totalTrips}
           icon={CalendarDays}
         />
         <StatCard
-          label="Największa ryba"
+          label={t("dashboard.largestFish")}
           value={
             stats.largestFish
               ? formatWeight(stats.largestFish.weight_kg)
@@ -93,21 +102,23 @@ export default async function ProfilePage() {
           icon={Trophy}
         />
         <StatCard
-          label="Ulubiony gatunek"
+          label={t("dashboard.favoriteSpecies")}
           value={stats.favoriteSpecies ?? "—"}
           icon={Sparkles}
         />
       </section>
 
       <section className="mt-8 space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">Dane profilu</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          {t("profile.settings")}
+        </h2>
         {profile ? <ProfileForm profile={profile} /> : null}
       </section>
 
       {profile && profile.permit_links.length > 0 ? (
         <section className="mt-8 space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">
-            Twoje linki do pozwoleń
+            {t("profile.permitLinksTitle")}
           </h2>
           <Card className="p-5">
             <PermitLinksList links={profile.permit_links} />
@@ -118,7 +129,7 @@ export default async function ProfilePage() {
       {ranking.length > 0 ? (
         <section className="mt-8 space-y-3">
           <h2 className="text-xl font-semibold tracking-tight">
-            Ranking gatunków
+            {t("profile.speciesRanking")}
           </h2>
           <Card className="p-4 sm:p-6">
             <SpeciesPieChart items={ranking} />

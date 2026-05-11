@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { CalendarDays, Plus } from "lucide-react";
 import { listTripsForUser } from "@/lib/queries/trips";
 import { Button } from "@/components/ui/button";
@@ -7,21 +8,25 @@ import { TripCard } from "@/components/cards/TripCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Fab } from "@/components/layout/Fab";
 
-export const metadata = { title: "Wyjazdy" };
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return { title: t("trips.title") };
+}
 
 export default async function TripsPage() {
+  const t = await getTranslations();
   const trips = await listTripsForUser();
 
   return (
     <>
       <PageHeader
-        title="Wyjazdy"
-        description="Wszystkie Twoje wyjazdy wędkarskie."
+        title={t("trips.title")}
+        description={t("trips.description")}
         actions={
           <Button asChild className="hidden md:inline-flex">
             <Link href="/trips/new">
               <Plus className="mr-1.5 h-4 w-4" />
-              Nowy wyjazd
+              {t("trips.newTitle")}
             </Link>
           </Button>
         }
@@ -30,11 +35,11 @@ export default async function TripsPage() {
       {trips.length === 0 ? (
         <EmptyState
           icon={CalendarDays}
-          title="Brak wyjazdów"
-          description="Zarejestruj swój pierwszy wyjazd, by zacząć śledzić ryby."
+          title={t("trips.emptyTitle")}
+          description={t("trips.emptyDescription")}
           action={
             <Button asChild>
-              <Link href="/trips/new">Nowy wyjazd</Link>
+              <Link href="/trips/new">{t("trips.newTitle")}</Link>
             </Button>
           }
         />
@@ -46,7 +51,7 @@ export default async function TripsPage() {
         </div>
       )}
 
-      <Fab href="/trips/new" label="Nowy wyjazd" />
+      <Fab href="/trips/new" label={t("trips.newTitle")} />
     </>
   );
 }

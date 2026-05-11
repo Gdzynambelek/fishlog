@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import {
   CalendarDays,
   Fish,
@@ -21,6 +22,7 @@ import { TopFishCard } from "@/components/cards/TopFishCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function DashboardPage() {
+  const t = await getTranslations();
   const [user, profile, stats, topFish, trips, catches] = await Promise.all([
     getUser(),
     getMyProfile(),
@@ -30,28 +32,40 @@ export default async function DashboardPage() {
     recentCatches(3),
   ]);
 
-  const greeting = resolveGreetingName(profile, user ?? {});
+  const greeting = resolveGreetingName(
+    profile,
+    user ?? {},
+    t("dashboard.greetingFallback"),
+  );
 
   return (
     <>
       <PageHeader
-        title={`Cześć, ${greeting}! 👋`}
-        description="Twój dziennik wędkarski w pigułce."
+        title={t("dashboard.greeting", { name: greeting })}
+        description={t("dashboard.description")}
         actions={
           <Button asChild size="lg">
             <Link href="/trips/new">
               <Plus className="mr-1.5 h-4 w-4" />
-              Nowy wyjazd
+              {t("dashboard.newTrip")}
             </Link>
           </Button>
         }
       />
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Połowy" value={stats.totalCatches} icon={Fish} />
-        <StatCard label="Wyjazdy" value={stats.totalTrips} icon={CalendarDays} />
         <StatCard
-          label="Największa ryba"
+          label={t("dashboard.totalCatches")}
+          value={stats.totalCatches}
+          icon={Fish}
+        />
+        <StatCard
+          label={t("dashboard.totalTrips")}
+          value={stats.totalTrips}
+          icon={CalendarDays}
+        />
+        <StatCard
+          label={t("dashboard.largestFish")}
           value={
             stats.largestFish
               ? formatWeight(stats.largestFish.weight_kg)
@@ -61,7 +75,7 @@ export default async function DashboardPage() {
           icon={Trophy}
         />
         <StatCard
-          label="Ulubiony gatunek"
+          label={t("dashboard.favoriteSpecies")}
           value={stats.favoriteSpecies ?? "—"}
           icon={Sparkles}
         />
@@ -71,7 +85,7 @@ export default async function DashboardPage() {
         <section className="mt-10 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold tracking-tight">
-              Top {topFish.length} największe ryby
+              {t("dashboard.topFish", { count: topFish.length })}
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -85,20 +99,20 @@ export default async function DashboardPage() {
       <section className="mt-10 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight">
-            Ostatnie wyjazdy
+            {t("dashboard.recentTrips")}
           </h2>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/trips">Zobacz wszystkie</Link>
+            <Link href="/trips">{t("dashboard.viewAll")}</Link>
           </Button>
         </div>
         {trips.length === 0 ? (
           <EmptyState
             icon={CalendarDays}
-            title="Brak wyjazdów"
-            description="Zacznij od dodania pierwszego wyjazdu wędkarskiego."
+            title={t("dashboard.emptyTripsTitle")}
+            description={t("dashboard.emptyTripsDescription")}
             action={
               <Button asChild>
-                <Link href="/trips/new">Nowy wyjazd</Link>
+                <Link href="/trips/new">{t("dashboard.newTrip")}</Link>
               </Button>
             }
           />
@@ -114,17 +128,17 @@ export default async function DashboardPage() {
       <section className="mt-10 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight">
-            Ostatnie połowy
+            {t("dashboard.recentCatches")}
           </h2>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/catches">Zobacz wszystkie</Link>
+            <Link href="/catches">{t("dashboard.viewAll")}</Link>
           </Button>
         </div>
         {catches.length === 0 ? (
           <EmptyState
             icon={Fish}
-            title="Brak połowów"
-            description="Dodaj wyjazd, a potem zarejestruj swoje pierwsze ryby."
+            title={t("dashboard.emptyCatchesTitle")}
+            description={t("dashboard.emptyCatchesDescription")}
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

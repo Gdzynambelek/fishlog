@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Filter, X } from "lucide-react";
 import {
   Sheet,
@@ -20,12 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { POPULAR_SPECIES_PL } from "@/lib/species";
 
-/**
- * Catch list filters. Stored in URL params so the server-rendered list
- * stays in sync with what the user picked. On mobile the controls live
- * inside a Sheet (collapsible); on desktop they're inline.
- */
 export function CatchesFilters() {
+  const t = useTranslations();
   const params = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -50,7 +47,6 @@ export function CatchesFilters() {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {/* Mobile: open in sheet. */}
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -60,7 +56,7 @@ export function CatchesFilters() {
             disabled={isPending}
           >
             <Filter className="mr-1.5 h-4 w-4" />
-            Filtry
+            {t("catches.filters.title")}
             {countActive(initial) > 0 ? (
               <Badge variant="secondary" className="ml-2">
                 {countActive(initial)}
@@ -70,34 +66,40 @@ export function CatchesFilters() {
         </SheetTrigger>
         <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Filtry</SheetTitle>
-            <SheetDescription>Zawęź listę połowów.</SheetDescription>
+            <SheetTitle>{t("catches.filters.title")}</SheetTitle>
+            <SheetDescription>
+              {t("catches.filters.description")}
+            </SheetDescription>
           </SheetHeader>
           <div className="space-y-5 py-4">
-            <SpeciesPicker draft={draft} setDraft={setDraft} />
-            <DateRangeInputs draft={draft} setDraft={setDraft} />
-            <MinWeightInput draft={draft} setDraft={setDraft} />
-            <PhotoOnlyToggle draft={draft} setDraft={setDraft} />
+            <SpeciesPicker draft={draft} setDraft={setDraft} t={t} />
+            <DateRangeInputs draft={draft} setDraft={setDraft} t={t} />
+            <MinWeightInput draft={draft} setDraft={setDraft} t={t} />
+            <PhotoOnlyToggle draft={draft} setDraft={setDraft} t={t} />
           </div>
           <SheetFooter className="gap-2">
             <Button variant="ghost" onClick={reset}>
-              Wyczyść
+              {t("catches.filters.clear")}
             </Button>
             <SheetClose asChild>
-              <Button onClick={applyAndClose}>Zastosuj</Button>
+              <Button onClick={applyAndClose}>
+                {t("catches.filters.apply")}
+              </Button>
             </SheetClose>
           </SheetFooter>
         </SheetContent>
       </Sheet>
 
-      {/* Desktop: inline controls. */}
       <div className="hidden flex-wrap items-end gap-3 md:flex">
         <SpeciesPicker
           draft={draft}
           setDraft={(s) =>
-            applyImmediate({ species: typeof s === "function" ? s(draft).species : s.species })
+            applyImmediate({
+              species:
+                typeof s === "function" ? s(draft).species : s.species,
+            })
           }
-          variant="inline"
+          t={t}
         />
         <DateRangeInputs
           draft={draft}
@@ -105,7 +107,7 @@ export function CatchesFilters() {
             const next = typeof s === "function" ? s(draft) : s;
             applyImmediate({ fromDate: next.fromDate, toDate: next.toDate });
           }}
-          variant="inline"
+          t={t}
         />
         <MinWeightInput
           draft={draft}
@@ -113,7 +115,7 @@ export function CatchesFilters() {
             const next = typeof s === "function" ? s(draft) : s;
             applyImmediate({ minWeight: next.minWeight });
           }}
-          variant="inline"
+          t={t}
         />
         <PhotoOnlyToggle
           draft={draft}
@@ -121,18 +123,20 @@ export function CatchesFilters() {
             const next = typeof s === "function" ? s(draft) : s;
             applyImmediate({ withPhotoOnly: next.withPhotoOnly });
           }}
-          variant="inline"
+          t={t}
         />
         {countActive(initial) > 0 ? (
           <Button variant="ghost" size="sm" onClick={reset}>
             <X className="mr-1 h-3.5 w-3.5" />
-            Wyczyść
+            {t("catches.filters.clear")}
           </Button>
         ) : null}
       </div>
     </div>
   );
 }
+
+type Translator = (key: string) => string;
 
 interface FilterState {
   species: string[];
@@ -171,7 +175,6 @@ function pushTo(
   startTransition: React.TransitionStartFunction,
 ) {
   const usp = new URLSearchParams();
-  // Preserve sort/dir if present.
   for (const k of ["sort", "dir"] as const) {
     const v = params.get(k);
     if (v) usp.set(k, v);
@@ -200,11 +203,11 @@ function countActive(s: FilterState): number {
 function SpeciesPicker({
   draft,
   setDraft,
-  variant = "stacked",
+  t,
 }: {
   draft: FilterState;
   setDraft: SetState;
-  variant?: "stacked" | "inline";
+  t: Translator;
 }) {
   function toggle(species: string) {
     setDraft((d) => ({
@@ -215,9 +218,9 @@ function SpeciesPicker({
     }));
   }
   return (
-    <div className={variant === "inline" ? "max-w-sm" : "space-y-2"}>
+    <div className="max-w-sm space-y-2">
       <Label className="text-xs uppercase tracking-wide text-muted-foreground">
-        Gatunek
+        {t("catches.filters.species")}
       </Label>
       <div className="flex flex-wrap gap-1.5 pt-1">
         {POPULAR_SPECIES_PL.map((s) => {
@@ -246,10 +249,11 @@ function SpeciesPicker({
 function DateRangeInputs({
   draft,
   setDraft,
+  t,
 }: {
   draft: FilterState;
   setDraft: SetState;
-  variant?: "stacked" | "inline";
+  t: Translator;
 }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:max-w-md">
@@ -258,7 +262,7 @@ function DateRangeInputs({
           htmlFor="filter-from"
           className="text-xs uppercase tracking-wide text-muted-foreground"
         >
-          Od
+          {t("catches.filters.from")}
         </Label>
         <Input
           id="filter-from"
@@ -274,15 +278,13 @@ function DateRangeInputs({
           htmlFor="filter-to"
           className="text-xs uppercase tracking-wide text-muted-foreground"
         >
-          Do
+          {t("catches.filters.to")}
         </Label>
         <Input
           id="filter-to"
           type="date"
           value={draft.toDate}
-          onChange={(e) =>
-            setDraft((d) => ({ ...d, toDate: e.target.value }))
-          }
+          onChange={(e) => setDraft((d) => ({ ...d, toDate: e.target.value }))}
         />
       </div>
     </div>
@@ -292,10 +294,11 @@ function DateRangeInputs({
 function MinWeightInput({
   draft,
   setDraft,
+  t,
 }: {
   draft: FilterState;
   setDraft: SetState;
-  variant?: "stacked" | "inline";
+  t: Translator;
 }) {
   return (
     <div className="space-y-1 sm:max-w-[10rem]">
@@ -303,7 +306,7 @@ function MinWeightInput({
         htmlFor="filter-minw"
         className="text-xs uppercase tracking-wide text-muted-foreground"
       >
-        Min. waga (kg)
+        {t("catches.filters.minWeight")}
       </Label>
       <Input
         id="filter-minw"
@@ -321,21 +324,20 @@ function MinWeightInput({
 function PhotoOnlyToggle({
   draft,
   setDraft,
+  t,
 }: {
   draft: FilterState;
   setDraft: SetState;
-  variant?: "stacked" | "inline";
+  t: Translator;
 }) {
   return (
     <div className="flex items-center gap-2">
       <Switch
         id="filter-photo"
         checked={draft.withPhotoOnly}
-        onCheckedChange={(v) =>
-          setDraft((d) => ({ ...d, withPhotoOnly: v }))
-        }
+        onCheckedChange={(v) => setDraft((d) => ({ ...d, withPhotoOnly: v }))}
       />
-      <Label htmlFor="filter-photo">Tylko ze zdjęciem</Label>
+      <Label htmlFor="filter-photo">{t("catches.filters.photoOnly")}</Label>
     </div>
   );
 }

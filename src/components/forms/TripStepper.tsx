@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { tripSchema, type TripFormValues } from "@/lib/validation";
+import { useTripSchema, type TripFormValues } from "@/lib/validation";
 import {
   fromDatetimeLocalValue,
   toDatetimeLocalValue,
@@ -28,20 +29,22 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationPicker } from "@/components/maps/LocationPicker";
 
-const STEPS = [
-  { id: 1, label: "Podstawowe info" },
-  { id: 2, label: "Lokalizacja" },
-  { id: 3, label: "Notatki" },
-] as const;
-
 export function TripStepper() {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useTripSchema();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [submitting, setSubmitting] = useState(false);
 
+  const STEPS = [
+    { id: 1, label: t("trips.steps.basicInfo") },
+    { id: 2, label: t("trips.steps.location") },
+    { id: 3, label: t("trips.steps.notes") },
+  ] as const;
+
   const form = useForm<TripFormValues>({
-    resolver: zodResolver(tripSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       location_name: "",
@@ -78,7 +81,7 @@ export function TripStepper() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Sesja wygasła. Zaloguj się ponownie.");
+        toast.error(t("errors.sessionExpired"));
         router.replace("/login");
         return;
       }
@@ -103,13 +106,13 @@ export function TripStepper() {
         .select("id")
         .single();
       if (error) {
-        toast.error("Nie udało się zapisać wyjazdu.", {
+        toast.error(t("trips.saveFailed"), {
           description: error.message,
         });
         return;
       }
 
-      toast.success("Wyjazd zapisany.");
+      toast.success(t("trips.saved"));
       router.replace(`/trips/${data.id}`);
       router.refresh();
     } finally {
@@ -175,10 +178,10 @@ export function TripStepper() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nazwa wyjazdu</FormLabel>
+                      <FormLabel>{t("trips.fields.name")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="np. Zalew Wiśniewski"
+                          placeholder={t("trips.fields.namePlaceholder")}
                           className="h-12"
                           autoFocus
                           {...field}
@@ -194,7 +197,7 @@ export function TripStepper() {
                     name="started_at"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Rozpoczęcie</FormLabel>
+                        <FormLabel>{t("trips.fields.started")}</FormLabel>
                         <FormControl>
                           <Input
                             type="datetime-local"
@@ -211,7 +214,9 @@ export function TripStepper() {
                     name="ended_at"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Zakończenie (opcjonalne)</FormLabel>
+                        <FormLabel>
+                          {t("trips.fields.ended")} {t("common.optional")}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="datetime-local"
@@ -245,10 +250,10 @@ export function TripStepper() {
                   name="location_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Opis miejsca</FormLabel>
+                      <FormLabel>{t("trips.fields.locationName")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="np. Jeziorko za lasem, przy pomoście"
+                          placeholder={t("trips.fields.locationNamePlaceholder")}
                           className="h-12"
                           value={field.value ?? ""}
                           onChange={field.onChange}
@@ -262,7 +267,7 @@ export function TripStepper() {
                   )}
                 />
                 <div className="space-y-2">
-                  <Label>Lokalizacja na mapie</Label>
+                  <Label>{t("trips.fields.mapLocation")}</Label>
                   <LocationPicker
                     value={
                       form.watch("latitude") != null &&
@@ -300,10 +305,10 @@ export function TripStepper() {
                   name="weather"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Pogoda</FormLabel>
+                      <FormLabel>{t("trips.fields.weather")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="np. Słonecznie, 18°C, lekki wiatr"
+                          placeholder={t("trips.fields.weatherPlaceholder")}
                           className="h-12"
                           value={field.value ?? ""}
                           onChange={field.onChange}
@@ -321,10 +326,10 @@ export function TripStepper() {
                   name="notes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Notatki</FormLabel>
+                      <FormLabel>{t("trips.fields.notes")}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Coś, co warto zapamiętać o tym wyjeździe…"
+                          placeholder={t("trips.fields.notesPlaceholder")}
                           rows={6}
                           value={field.value ?? ""}
                           onChange={field.onChange}
@@ -350,11 +355,11 @@ export function TripStepper() {
             disabled={step === 1 || submitting}
           >
             <ArrowLeft className="mr-1.5 h-4 w-4" />
-            Wstecz
+            {t("common.back")}
           </Button>
           {step < 3 ? (
             <Button type="button" onClick={next} disabled={submitting}>
-              Dalej
+              {t("common.next")}
               <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
           ) : (
@@ -364,7 +369,7 @@ export function TripStepper() {
               ) : (
                 <Save className="mr-1.5 h-4 w-4" />
               )}
-              Zapisz wyjazd
+              {t("common.save")}
             </Button>
           )}
         </div>

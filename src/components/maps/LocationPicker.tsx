@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import { Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import {
   getCurrentPosition,
 } from "@/lib/geolocation";
 
-// Leaflet must NOT run on the server: it touches `window` at import time.
 const Inner = dynamic(() => import("./LocationPickerInner"), {
   ssr: false,
   loading: () => (
@@ -25,29 +25,23 @@ export interface LocationPickerProps {
   description?: string;
 }
 
-/**
- * Composite location picker: a "use my location" button + an interactive
- * Leaflet map. Click the map to drop a marker, or press the button to
- * use HTML5 geolocation.
- */
 export function LocationPicker({
   value,
   onChange,
-  description = "Kliknij na mapie lub użyj GPS, by wskazać miejsce.",
+  description,
 }: LocationPickerProps) {
+  const t = useTranslations();
   const [locating, setLocating] = useState(false);
 
   async function useGps() {
     setLocating(true);
     try {
-      const coords = await getCurrentPosition();
+      const coords = await getCurrentPosition(t);
       onChange(coords);
-      toast.success("Pobrano lokalizację z GPS.");
+      toast.success(t("map.gotFromGps"));
     } catch (err) {
       const msg =
-        err instanceof GeolocationError
-          ? err.message
-          : "Nie udało się pobrać lokalizacji.";
+        err instanceof GeolocationError ? err.message : t("map.gpsError");
       toast.error(msg);
     } finally {
       setLocating(false);
@@ -57,7 +51,9 @@ export function LocationPicker({
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-xs text-muted-foreground">
+          {description ?? t("map.hint")}
+        </p>
         <Button
           type="button"
           variant="outline"
@@ -70,7 +66,7 @@ export function LocationPicker({
           ) : (
             <MapPin className="mr-1.5 h-4 w-4" />
           )}
-          Użyj mojej lokalizacji
+          {t("map.useMyLocation")}
         </Button>
       </div>
       <Inner value={value} onChange={onChange} />

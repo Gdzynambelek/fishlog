@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 import {
-  profileSchema,
+  useProfileSchema,
   type ProfileFormValues,
 } from "@/lib/validation";
 import type { Profile } from "@/types/database.types";
@@ -24,18 +25,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-/**
- * Edit profile: display name, fishing license number, and a list of
- * permit links (label + URL pairs). Click on a link in the saved view
- * opens the seller in a new tab — a quick shortcut to buy permits.
- */
 export function ProfileForm({ profile }: { profile: Profile }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useProfileSchema();
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       first_name: profile.first_name ?? "",
       last_name: profile.last_name ?? "",
@@ -66,12 +64,12 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         })
         .eq("id", profile.id);
       if (error) {
-        toast.error("Nie udało się zapisać profilu.", {
+        toast.error(t("profile.saveFailed"), {
           description: error.message,
         });
         return;
       }
-      toast.success("Profil zapisany.");
+      toast.success(t("profile.saved"));
       router.refresh();
     } finally {
       setSubmitting(false);
@@ -92,12 +90,12 @@ export function ProfileForm({ profile }: { profile: Profile }) {
               name="first_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Imię</FormLabel>
+                  <FormLabel>{t("profile.fields.firstName")}</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="given-name"
                       className="h-11"
-                      placeholder="Jan"
+                      placeholder={t("profile.fields.firstNamePlaceholder")}
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
@@ -114,12 +112,12 @@ export function ProfileForm({ profile }: { profile: Profile }) {
               name="last_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nazwisko</FormLabel>
+                  <FormLabel>{t("profile.fields.lastName")}</FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="family-name"
                       className="h-11"
-                      placeholder="Kowalski"
+                      placeholder={t("profile.fields.lastNamePlaceholder")}
                       value={field.value ?? ""}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
@@ -138,11 +136,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             name="fishing_license"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Numer karty wędkarskiej</FormLabel>
+                <FormLabel>{t("profile.fields.fishingLicense")}</FormLabel>
                 <FormControl>
                   <Input
                     className="h-11"
-                    placeholder="np. PZW-12345"
+                    placeholder={t("profile.fields.fishingLicensePlaceholder")}
                     value={field.value ?? ""}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -160,10 +158,10 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           <div className="flex items-end justify-between gap-2">
             <div>
               <h3 className="text-sm font-semibold">
-                Linki do wykupienia pozwoleń
+                {t("profile.permitLinksSectionTitle")}
               </h3>
               <p className="text-xs text-muted-foreground">
-                Dodaj sklepy i strony, gdzie kupujesz pozwolenia na łowienie.
+                {t("profile.permitLinksHint")}
               </p>
             </div>
             <Button
@@ -173,12 +171,14 @@ export function ProfileForm({ profile }: { profile: Profile }) {
               onClick={() => links.append({ label: "", url: "" })}
             >
               <Plus className="mr-1 h-3.5 w-3.5" />
-              Dodaj
+              {t("common.add")}
             </Button>
           </div>
 
           {links.fields.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Brak linków.</p>
+            <p className="text-sm text-muted-foreground">
+              {t("profile.noLinks")}
+            </p>
           ) : (
             <ul className="space-y-3">
               {links.fields.map((field, i) => (
@@ -193,7 +193,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                       <FormItem>
                         <FormControl>
                           <Input
-                            placeholder="Etykieta (np. PZW Mazowiecki)"
+                            placeholder={t("profile.linkLabelPlaceholder")}
                             className="h-10"
                             {...f}
                           />
@@ -211,7 +211,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                           <Input
                             type="url"
                             inputMode="url"
-                            placeholder="https://..."
+                            placeholder={t("profile.linkUrlPlaceholder")}
                             className="h-10"
                             {...f}
                           />
@@ -225,7 +225,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                     variant="ghost"
                     size="icon"
                     onClick={() => links.remove(i)}
-                    aria-label="Usuń link"
+                    aria-label={t("profile.deleteLink")}
                     className="self-start"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -243,7 +243,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             ) : (
               <Save className="mr-1.5 h-4 w-4" />
             )}
-            Zapisz profil
+            {t("common.save")}
           </Button>
         </div>
       </form>
@@ -251,7 +251,6 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   );
 }
 
-/** Read-only display of permit links — for users who want to buy a permit. */
 export function PermitLinksList({
   links,
 }: {

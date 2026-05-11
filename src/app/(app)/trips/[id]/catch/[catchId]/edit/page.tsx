@@ -1,15 +1,20 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { createClient } from "@/utils/supabase/server";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CatchEditForm } from "@/components/forms/CatchEditForm";
 
-export const metadata = { title: "Edycja połowu" };
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return { title: t("catches.editTitle") };
+}
 
 export default async function EditCatchPage({
   params,
 }: {
   params: { id: string; catchId: string };
 }) {
+  const t = await getTranslations();
   const supabase = createClient();
   const { data, error } = await supabase
     .from("catches")
@@ -27,9 +32,11 @@ export default async function EditCatchPage({
   return (
     <>
       <PageHeader
-        title="Edytuj połów"
+        title={t("catches.editTitle")}
         description={
-          trips?.name ? `Wyjazd: ${trips.name}` : "Aktualizuj informacje."
+          trips?.name
+            ? t("catches.tripLabel", { name: trips.name })
+            : undefined
         }
       />
       <div className="mx-auto max-w-2xl">

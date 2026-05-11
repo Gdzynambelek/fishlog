@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Check, ChevronsUpDown, Lightbulb } from "lucide-react";
 import {
   Command,
@@ -18,17 +19,6 @@ import {
 } from "@/lib/species";
 import { cn } from "@/lib/utils";
 
-/**
- * Combobox-style picker for fish species.
- *
- * Behavior:
- *  - Pick from the popular species list (substring match by cmdk).
- *  - Type a custom name (free text) — accepted as-is.
- *  - When the typed value looks like a typo of a known species (Levenshtein
- *    fuzzy match), surface a "Może chodziło Ci o…" group with the canonical
- *    name as a one-tap correction. The "Użyj wpisanego" entry stays — user
- *    can override and keep their spelling.
- */
 export function SpeciesAutocomplete({
   value,
   onChange,
@@ -40,6 +30,7 @@ export function SpeciesAutocomplete({
   id?: string;
   invalid?: boolean;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -78,7 +69,7 @@ export function SpeciesAutocomplete({
             !value && "text-muted-foreground",
           )}
         >
-          {value || "Wybierz lub wpisz gatunek…"}
+          {value || t("species.selectOrType")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -88,15 +79,15 @@ export function SpeciesAutocomplete({
       >
         <Command shouldFilter>
           <CommandInput
-            placeholder="Szukaj lub wpisz własny…"
+            placeholder={t("species.searchPlaceholder")}
             value={search}
             onValueChange={setSearch}
           />
           <CommandList>
-            <CommandEmpty>Brak wyników.</CommandEmpty>
+            <CommandEmpty>{t("species.noResults")}</CommandEmpty>
 
             {suggestion ? (
-              <CommandGroup heading="Może chodziło Ci o…">
+              <CommandGroup heading={t("species.didYouMean")}>
                 <CommandItem
                   value={`__suggestion__:${suggestion}`}
                   onSelect={() => pick(suggestion)}
@@ -105,14 +96,14 @@ export function SpeciesAutocomplete({
                   <Lightbulb className="mr-2 h-4 w-4 text-[hsl(41_73%_56%)]" />
                   <span className="font-medium">{suggestion}</span>
                   <span className="ml-2 text-xs text-muted-foreground">
-                    (poprawiona pisownia)
+                    {t("species.correctedSpelling")}
                   </span>
                 </CommandItem>
               </CommandGroup>
             ) : null}
 
             {showCustom ? (
-              <CommandGroup heading="Użyj wpisanego">
+              <CommandGroup heading={t("species.useCustom")}>
                 <CommandItem
                   value={`__custom__:${trimmedSearch}`}
                   onSelect={() => pick(trimmedSearch)}
@@ -120,14 +111,14 @@ export function SpeciesAutocomplete({
                   &bdquo;{trimmedSearch}&rdquo;
                   {suggestion ? (
                     <span className="ml-2 text-xs text-muted-foreground">
-                      (zostaw moją pisownię)
+                      {t("species.keepMine")}
                     </span>
                   ) : null}
                 </CommandItem>
               </CommandGroup>
             ) : null}
 
-            <CommandGroup heading="Popularne gatunki">
+            <CommandGroup heading={t("species.popular")}>
               {POPULAR_SPECIES_PL.map((species) => (
                 <CommandItem
                   key={species}

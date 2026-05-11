@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
@@ -16,11 +17,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-/**
- * Confirmation dialog + delete action for a trip. Cascade in the DB
- * removes child catches; orphaned photos are NOT cleaned up here — call
- * out as known limitation in DEPLOY.md.
- */
 export function DeleteTripButton({
   tripId,
   tripName,
@@ -28,6 +24,7 @@ export function DeleteTripButton({
   tripId: string;
   tripName: string;
 }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
   const [open, setOpen] = useState(false);
@@ -38,13 +35,13 @@ export function DeleteTripButton({
     const { error } = await supabase.from("trips").delete().eq("id", tripId);
     setPending(false);
     if (error) {
-      toast.error("Nie udało się usunąć wyjazdu.", {
+      toast.error(t("trips.deleteFailed"), {
         description: error.message,
       });
       return;
     }
     setOpen(false);
-    toast.success("Wyjazd usunięty.");
+    toast.success(t("trips.deleted"));
     router.replace("/trips");
     router.refresh();
   }
@@ -52,17 +49,15 @@ export function DeleteTripButton({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Usuń wyjazd">
+        <Button variant="ghost" size="icon" aria-label={t("common.delete")}>
           <Trash2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Usunąć wyjazd?</DialogTitle>
+          <DialogTitle>{t("trips.deleteTitle")}</DialogTitle>
           <DialogDescription>
-            &bdquo;{tripName}&rdquo; oraz wszystkie zarejestrowane połowy
-            zostaną usunięte.
-            Tej akcji nie można cofnąć.
+            {t("trips.deleteDescription", { name: tripName })}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -71,7 +66,7 @@ export function DeleteTripButton({
             onClick={() => setOpen(false)}
             disabled={pending}
           >
-            Anuluj
+            {t("common.cancel")}
           </Button>
           <Button
             variant="destructive"
@@ -83,7 +78,7 @@ export function DeleteTripButton({
             ) : (
               <Trash2 className="mr-1.5 h-4 w-4" />
             )}
-            Usuń
+            {t("common.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Edit, Fish, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
@@ -28,11 +29,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-/**
- * Catch card for the trip detail page with edit + delete affordances in
- * an overflow menu. Distinct from the global CatchCard (in /catches list)
- * which only navigates back to the parent trip.
- */
 export function TripCatchItem({
   item,
   tripId,
@@ -40,6 +36,8 @@ export function TripCatchItem({
   item: Catch;
   tripId: string;
 }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const supabase = createClient();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -54,13 +52,13 @@ export function TripCatchItem({
       .eq("id", item.id);
     if (error) {
       setDeleting(false);
-      toast.error("Nie udało się usunąć.", { description: error.message });
+      toast.error(t("catches.deleteFailed"), { description: error.message });
       return;
     }
     if (photoUrl) await deleteCatchPhotoByUrl(photoUrl);
     setDeleting(false);
     setConfirmOpen(false);
-    toast.success("Połów usunięty.");
+    toast.success(t("catches.deleted"));
     router.refresh();
   }
 
@@ -86,7 +84,7 @@ export function TripCatchItem({
               variant="secondary"
               className="absolute right-2 top-2 bg-background/90 backdrop-blur"
             >
-              Wypuszczona
+              {t("catches.released")}
             </Badge>
           ) : null}
           <DropdownMenu>
@@ -95,7 +93,7 @@ export function TripCatchItem({
                 variant="secondary"
                 size="icon"
                 className="absolute left-2 top-2 h-8 w-8 bg-background/90 backdrop-blur"
-                aria-label="Więcej akcji"
+                aria-label={t("common.moreActions")}
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
@@ -107,7 +105,7 @@ export function TripCatchItem({
                   className="cursor-pointer"
                 >
                   <Edit className="mr-2 h-4 w-4" />
-                  Edytuj
+                  {t("common.edit")}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -115,7 +113,7 @@ export function TripCatchItem({
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Usuń
+                {t("common.delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -130,7 +128,7 @@ export function TripCatchItem({
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>{formatLength(item.length_cm)}</span>
             <time dateTime={item.caught_at}>
-              {formatDateTime(item.caught_at)}
+              {formatDateTime(item.caught_at, locale)}
             </time>
           </div>
           {item.notes ? (
@@ -144,10 +142,9 @@ export function TripCatchItem({
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Usunąć połów?</DialogTitle>
+            <DialogTitle>{t("catches.deleteTitle")}</DialogTitle>
             <DialogDescription>
-              Połów &bdquo;{item.species}&rdquo; zostanie trwale usunięty wraz
-              ze zdjęciem.
+              {t("catches.deleteDescription", { species: item.species })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -156,7 +153,7 @@ export function TripCatchItem({
               onClick={() => setConfirmOpen(false)}
               disabled={deleting}
             >
-              Anuluj
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -168,7 +165,7 @@ export function TripCatchItem({
               ) : (
                 <Trash2 className="mr-1.5 h-4 w-4" />
               )}
-              Usuń
+              {t("common.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

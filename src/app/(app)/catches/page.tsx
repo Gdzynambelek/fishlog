@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Fish } from "lucide-react";
 import { listCatchesForUser, type CatchSort } from "@/lib/queries/catches";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -5,7 +6,10 @@ import { CatchesFilters } from "@/components/catches/CatchesFilters";
 import { InfiniteCatches } from "@/components/catches/InfiniteCatches";
 import { EmptyState } from "@/components/ui/empty-state";
 
-export const metadata = { title: "Połowy" };
+export async function generateMetadata() {
+  const t = await getTranslations();
+  return { title: t("catches.title") };
+}
 
 interface PageProps {
   searchParams: {
@@ -20,6 +24,7 @@ interface PageProps {
 }
 
 export default async function CatchesPage({ searchParams }: PageProps) {
+  const t = await getTranslations();
   const sort = isSort(searchParams.sort) ? searchParams.sort : "caught_at";
   const ascending = searchParams.dir === "asc";
   const species = toArray(searchParams.species);
@@ -36,8 +41,8 @@ export default async function CatchesPage({ searchParams }: PageProps) {
   return (
     <>
       <PageHeader
-        title="Połowy"
-        description="Wszystkie zarejestrowane ryby."
+        title={t("catches.title")}
+        description={t("catches.description")}
       />
       <div className="mb-6">
         <CatchesFilters />
@@ -46,8 +51,8 @@ export default async function CatchesPage({ searchParams }: PageProps) {
       {items.length === 0 ? (
         <EmptyState
           icon={Fish}
-          title="Brak połowów"
-          description="Spróbuj zmienić filtry albo dodaj nowy połów do wyjazdu."
+          title={t("catches.emptyTitle")}
+          description={t("catches.emptyDescription")}
         />
       ) : (
         <InfiniteCatches initial={items} initialHasMore={hasMore} />

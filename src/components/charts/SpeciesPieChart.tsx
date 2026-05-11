@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import {
   Cell,
   Legend,
@@ -24,13 +25,18 @@ const OTHER_COLOR = "hsl(var(--muted))";
 
 const TOP_N = 8;
 
-/**
- * Pie chart of species frequency for /profile. Top 8 species shown
- * individually; the rest grouped as "Inne".
- */
+const OTHER_LABEL_BY_LOCALE: Record<string, string> = {
+  pl: "Inne",
+  en: "Other",
+  de: "Andere",
+};
+
 export function SpeciesPieChart({ items }: { items: SpeciesRankItem[] }) {
+  const t = useTranslations();
+  const locale = useLocale();
   if (items.length === 0) return null;
 
+  const otherLabel = OTHER_LABEL_BY_LOCALE[locale] ?? "Other";
   const top = items.slice(0, TOP_N);
   const rest = items.slice(TOP_N);
   const data = [
@@ -38,7 +44,7 @@ export function SpeciesPieChart({ items }: { items: SpeciesRankItem[] }) {
     ...(rest.length > 0
       ? [
           {
-            name: "Inne",
+            name: otherLabel,
             value: rest.reduce((sum, it) => sum + it.count, 0),
           },
         ]
@@ -63,7 +69,7 @@ export function SpeciesPieChart({ items }: { items: SpeciesRankItem[] }) {
               <Cell
                 key={entry.name}
                 fill={
-                  entry.name === "Inne"
+                  entry.name === otherLabel
                     ? OTHER_COLOR
                     : (COLORS[idx % COLORS.length] ?? OTHER_COLOR)
                 }
@@ -73,8 +79,7 @@ export function SpeciesPieChart({ items }: { items: SpeciesRankItem[] }) {
           <Tooltip
             formatter={(value, name) => {
               const n = typeof value === "number" ? value : Number(value);
-              const word = n === 1 ? "ryba" : n < 5 ? "ryby" : "ryb";
-              return [`${n} ${word}`, String(name)];
+              return [`${n} ${pluralFish(n, t)}`, String(name)];
             }}
           />
           <Legend
@@ -88,4 +93,10 @@ export function SpeciesPieChart({ items }: { items: SpeciesRankItem[] }) {
       </ResponsiveContainer>
     </div>
   );
+}
+
+function pluralFish(n: number, t: (key: string) => string): string {
+  if (n === 1) return t("common.fish_one");
+  if (n < 5) return t("common.fish_few");
+  return t("common.fish_many");
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 import { ArrowDown, ArrowUp, Fish } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -18,12 +19,9 @@ import type { CatchWithTripName } from "@/lib/queries/catches";
 
 type Sort = "caught_at" | "weight_kg" | "length_cm";
 
-/**
- * Desktop table view for /catches. Sort by clicking headers — sort is
- * encoded in URL searchParams so it survives navigation/reload and stays
- * server-renderable.
- */
 export function CatchesTable({ items }: { items: CatchWithTripName[] }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const params = useSearchParams();
   const sort = (params.get("sort") as Sort) ?? "caught_at";
@@ -44,10 +42,10 @@ export function CatchesTable({ items }: { items: CatchWithTripName[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[80px]">Zdjęcie</TableHead>
-          <TableHead>Gatunek</TableHead>
+          <TableHead className="w-[80px]">{t("catches.sort.photo")}</TableHead>
+          <TableHead>{t("catches.table.species")}</TableHead>
           <SortableHead
-            label="Waga"
+            label={t("catches.sort.weight")}
             field="weight_kg"
             current={sort}
             ascending={ascending}
@@ -55,7 +53,7 @@ export function CatchesTable({ items }: { items: CatchWithTripName[] }) {
             className="text-right"
           />
           <SortableHead
-            label="Długość"
+            label={t("catches.sort.length")}
             field="length_cm"
             current={sort}
             ascending={ascending}
@@ -63,13 +61,13 @@ export function CatchesTable({ items }: { items: CatchWithTripName[] }) {
             className="text-right"
           />
           <SortableHead
-            label="Data"
+            label={t("catches.sort.date")}
             field="caught_at"
             current={sort}
             ascending={ascending}
             onClick={setSort}
           />
-          <TableHead>Wyjazd</TableHead>
+          <TableHead>{t("catches.sort.trip")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -102,7 +100,7 @@ export function CatchesTable({ items }: { items: CatchWithTripName[] }) {
               {formatLength(item.length_cm)}
             </TableCell>
             <TableCell className="whitespace-nowrap text-muted-foreground">
-              {formatDateTime(item.caught_at)}
+              {formatDateTime(item.caught_at, locale)}
             </TableCell>
             <TableCell>
               {item.trip_name ? (

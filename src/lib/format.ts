@@ -1,45 +1,59 @@
-import { format, formatDistanceToNow } from "date-fns";
-import { pl } from "date-fns/locale";
+import { format, formatDistanceToNow, type Locale } from "date-fns";
+import { pl, enUS, de } from "date-fns/locale";
 
-/** Formats a date as "12 maja 2025" in Polish. */
-export function formatDate(d: string | Date): string {
+const LOCALE_MAP: Record<string, Locale> = {
+  pl,
+  en: enUS,
+  de,
+};
+
+function pickLocale(code: string | undefined): Locale {
+  if (code && LOCALE_MAP[code]) return LOCALE_MAP[code] as Locale;
+  return pl;
+}
+
+/** "12 May 2025" / "12 maja 2025" / "12. Mai 2025" depending on locale. */
+export function formatDate(
+  d: string | Date,
+  localeCode = "pl",
+): string {
   return format(typeof d === "string" ? new Date(d) : d, "d MMMM yyyy", {
-    locale: pl,
+    locale: pickLocale(localeCode),
   });
 }
 
-/** Formats a date+time as "12 maja 2025, 14:30". */
-export function formatDateTime(d: string | Date): string {
-  return format(typeof d === "string" ? new Date(d) : d, "d MMMM yyyy, HH:mm", {
-    locale: pl,
-  });
+export function formatDateTime(
+  d: string | Date,
+  localeCode = "pl",
+): string {
+  return format(
+    typeof d === "string" ? new Date(d) : d,
+    "d MMMM yyyy, HH:mm",
+    { locale: pickLocale(localeCode) },
+  );
 }
 
-/** Returns "2 dni temu" / "5 minut temu" etc. */
-export function formatRelative(d: string | Date): string {
+export function formatRelative(
+  d: string | Date,
+  localeCode = "pl",
+): string {
   return formatDistanceToNow(typeof d === "string" ? new Date(d) : d, {
-    locale: pl,
+    locale: pickLocale(localeCode),
     addSuffix: true,
   });
 }
 
-/** Returns "1.2 kg" / "—" for null. */
+/** Returns "1.2 kg" / "—" for null. Unit is locale-independent. */
 export function formatWeight(kg: number | null | undefined): string {
   if (kg == null) return "—";
   return `${kg.toFixed(2).replace(/\.?0+$/, "")} kg`;
 }
 
-/** Returns "42 cm" / "—" for null. */
 export function formatLength(cm: number | null | undefined): string {
   if (cm == null) return "—";
   return `${cm.toFixed(1).replace(/\.0$/, "")} cm`;
 }
 
-/**
- * Formats a JS Date in the local timezone as the value expected by
- * `<input type="datetime-local">` (yyyy-MM-ddTHH:mm). The browser's
- * datetime-local rejects timezone-aware ISO strings.
- */
 export function toDatetimeLocalValue(d: Date = new Date()): string {
   const pad = (n: number) => n.toString().padStart(2, "0");
   return (
@@ -48,7 +62,6 @@ export function toDatetimeLocalValue(d: Date = new Date()): string {
   );
 }
 
-/** Convert datetime-local string to ISO string for Supabase. */
 export function fromDatetimeLocalValue(s: string): string {
   return new Date(s).toISOString();
 }

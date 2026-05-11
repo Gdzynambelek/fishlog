@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   CalendarDays,
   Cloud,
@@ -30,6 +31,8 @@ export default async function TripDetailPage({
 }: {
   params: { id: string };
 }) {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const trip = await getTripById(params.id);
   if (!trip) notFound();
 
@@ -38,8 +41,6 @@ export default async function TripDetailPage({
     listAttachmentsForTrip(trip.id),
   ]);
 
-  // Sign each attachment URL server-side so the client never sees the raw
-  // storage path. Done in parallel — N is small (a handful of PDFs per trip).
   const attachments = await Promise.all(
     rawAttachments.map(async (a) => ({
       ...a,
@@ -55,12 +56,17 @@ export default async function TripDetailPage({
         title={trip.name}
         description={
           trip.location_name
-            ? `${trip.location_name} · ${formatDateTime(trip.started_at)}`
-            : formatDateTime(trip.started_at)
+            ? `${trip.location_name} · ${formatDateTime(trip.started_at, locale)}`
+            : formatDateTime(trip.started_at, locale)
         }
         actions={
           <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="icon" aria-label="Edytuj wyjazd">
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              aria-label={t("common.edit")}
+            >
               <Link href={`/trips/${trip.id}/edit`}>
                 <Edit className="h-4 w-4" />
               </Link>
@@ -69,7 +75,7 @@ export default async function TripDetailPage({
             <Button asChild>
               <Link href={`/trips/${trip.id}/catch/new`}>
                 <Plus className="mr-1.5 h-4 w-4" />
-                Dodaj połów
+                {t("catches.addOne")}
               </Link>
             </Button>
           </div>
@@ -82,33 +88,33 @@ export default async function TripDetailPage({
             <StaticMap latitude={trip.latitude} longitude={trip.longitude} />
           ) : (
             <Card className="flex h-64 items-center justify-center text-muted-foreground">
-              Brak współrzędnych łowiska
+              {t("trips.noCoordinates")}
             </Card>
           )}
         </div>
 
         <div className="space-y-3">
           <Card className="space-y-3 p-5 text-sm">
-            <Row icon={CalendarDays} label="Rozpoczęcie">
-              {formatDateTime(trip.started_at)}
+            <Row icon={CalendarDays} label={t("trips.fields.started")}>
+              {formatDateTime(trip.started_at, locale)}
             </Row>
             {trip.ended_at ? (
-              <Row icon={CalendarDays} label="Zakończenie">
-                {formatDateTime(trip.ended_at)}
+              <Row icon={CalendarDays} label={t("trips.fields.ended")}>
+                {formatDateTime(trip.ended_at, locale)}
               </Row>
             ) : null}
             {trip.location_name ? (
-              <Row icon={MapPin} label="Miejsce">
+              <Row icon={MapPin} label={t("trips.fields.locationName")}>
                 {trip.location_name}
               </Row>
             ) : null}
             {trip.weather ? (
-              <Row icon={Cloud} label="Pogoda">
+              <Row icon={Cloud} label={t("trips.fields.weather")}>
                 {trip.weather}
               </Row>
             ) : null}
             {trip.notes ? (
-              <Row icon={StickyNote} label="Notatki">
+              <Row icon={StickyNote} label={t("trips.fields.notes")}>
                 <p className="whitespace-pre-wrap">{trip.notes}</p>
               </Row>
             ) : null}
@@ -117,13 +123,16 @@ export default async function TripDetailPage({
       </div>
 
       <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <StatCard label="Połowy" value={stats.totalCatches} />
         <StatCard
-          label="Łączna waga"
+          label={t("trips.stats.totalCatches")}
+          value={stats.totalCatches}
+        />
+        <StatCard
+          label={t("trips.stats.totalWeight")}
           value={formatWeight(stats.totalWeightKg || null)}
         />
         <StatCard
-          label="Największa"
+          label={t("trips.stats.largest")}
           value={
             stats.largestFish
               ? formatWeight(stats.largestFish.weight_kg)
@@ -138,14 +147,18 @@ export default async function TripDetailPage({
       </section>
 
       <section className="mt-8 space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">Połowy</h2>
+        <h2 className="text-xl font-semibold tracking-tight">
+          {t("trips.catchesSection")}
+        </h2>
         {catches.length === 0 ? (
           <EmptyState
-            title="Brak połowów na tym wyjeździe"
-            description="Złowiłeś coś? Dodaj swój pierwszy połów."
+            title={t("trips.noCatchesTitle")}
+            description={t("trips.noCatchesDescription")}
             action={
               <Button asChild>
-                <Link href={`/trips/${trip.id}/catch/new`}>Dodaj połów</Link>
+                <Link href={`/trips/${trip.id}/catch/new`}>
+                  {t("catches.addOne")}
+                </Link>
               </Button>
             }
           />

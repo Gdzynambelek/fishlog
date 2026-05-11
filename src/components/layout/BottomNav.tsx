@@ -2,13 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "./nav-items";
 
-/**
- * Routes where bottom nav should hide — focused forms whose own sticky
- * save bar would otherwise fight for the bottom of the screen.
- */
 const HIDDEN_ON = [
   /^\/trips\/new$/,
   /^\/trips\/[^/]+\/edit$/,
@@ -16,11 +13,8 @@ const HIDDEN_ON = [
   /^\/trips\/[^/]+\/catch\/[^/]+\/edit$/,
 ];
 
-/**
- * Mobile bottom nav. 4 items, 56px tall, safe-area-aware so the icons
- * sit above the iOS home indicator.
- */
 export function BottomNav({ className }: { className?: string }) {
+  const t = useTranslations();
   const pathname = usePathname();
   if (HIDDEN_ON.some((re) => re.test(pathname))) return null;
   return (
@@ -29,12 +23,13 @@ export function BottomNav({ className }: { className?: string }) {
         "fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur safe-area-pb",
         className,
       )}
-      aria-label="Nawigacja"
+      aria-label={t("nav.label")}
     >
       <ul className="mx-auto flex max-w-md items-stretch justify-around">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
           const active =
             pathname === href || pathname.startsWith(`${href}/`);
+          const label = t(`nav.${labelKey}`);
           return (
             <li key={href} className="flex-1">
               <Link

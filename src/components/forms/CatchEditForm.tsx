@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { catchSchema, type CatchFormValues } from "@/lib/validation";
+import { useCatchSchema, type CatchFormValues } from "@/lib/validation";
 import {
   fromDatetimeLocalValue,
   toDatetimeLocalValue,
@@ -38,21 +39,17 @@ import { PhotoCapture } from "./PhotoCapture";
 
 type PhotoMode = "keep" | "replace" | "remove";
 
-/**
- * Edit existing catch. Photo handling is the trickiest part:
- *  - keep:    leave photo_url as-is
- *  - replace: upload new file, on success delete the old one
- *  - remove:  null out photo_url, delete the old file
- */
 export function CatchEditForm({ existing }: { existing: Catch }) {
+  const t = useTranslations();
   const router = useRouter();
   const supabase = createClient();
+  const schema = useCatchSchema();
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoMode, setPhotoMode] = useState<PhotoMode>("keep");
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<CatchFormValues>({
-    resolver: zodResolver(catchSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       species: existing.species,
       weight_kg: existing.weight_kg,
@@ -81,19 +78,17 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
     setSubmitting(true);
     let newUrl: string | null = null;
     try {
-      // 1. Upload new photo if replacing.
       if (photoMode === "replace" && photoFile) {
         try {
           newUrl = await uploadCatchPhoto(photoFile, existing.trip_id);
         } catch (err) {
-          toast.error("Nie udało się wgrać nowego zdjęcia.", {
+          toast.error(t("photo.uploadNewFailed"), {
             description: err instanceof Error ? err.message : undefined,
           });
           return;
         }
       }
 
-      // 2. Update row.
       const update: CatchUpdate = {
         species: values.species.trim(),
         weight_kg: values.weight_kg,
@@ -113,15 +108,13 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
         .eq("id", existing.id);
 
       if (error) {
-        // Roll back the new upload to avoid orphans.
         if (newUrl) await deleteCatchPhotoByUrl(newUrl);
-        toast.error("Nie udało się zapisać zmian.", {
+        toast.error(t("catches.updateFailed"), {
           description: error.message,
         });
         return;
       }
 
-      // 3. Cleanup old photo if it was replaced or removed.
       if (
         (photoMode === "replace" || photoMode === "remove") &&
         existing.photo_url
@@ -129,7 +122,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
         await deleteCatchPhotoByUrl(existing.photo_url);
       }
 
-      toast.success("Połów zaktualizowany.");
+      toast.success(t("catches.updated"));
       router.replace(`/trips/${existing.trip_id}`);
       router.refresh();
     } finally {
@@ -137,7 +130,6 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
     }
   }
 
-  // What to display for photo: existing if keeping, otherwise PhotoCapture.
   const showExistingPhoto =
     photoMode === "keep" && existing.photo_url && !photoFile;
 
@@ -154,7 +146,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             name="species"
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Gatunek</FormLabel>
+                <FormLabel>{t("catches.fields.species")}</FormLabel>
                 <FormControl>
                   <SpeciesAutocomplete
                     value={field.value}
@@ -172,7 +164,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
               name="weight_kg"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Waga (kg)</FormLabel>
+                  <FormLabel>{t("catches.fields.weightKg")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -199,7 +191,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
               name="length_cm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Długość (cm)</FormLabel>
+                  <FormLabel>{t("catches.fields.lengthCm")}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -227,7 +219,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             name="caught_at"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Data i czas złowienia</FormLabel>
+                <FormLabel>{t("catches.fields.caughtAt")}</FormLabel>
                 <FormControl>
                   <Input type="datetime-local" className="h-12" {...field} />
                 </FormControl>
@@ -238,13 +230,13 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
         </Card>
 
         <Card className="space-y-3 p-5">
-          <Label>Zdjęcie</Label>
+          <Label>{t("catches.fields.photo")}</Label>
           {showExistingPhoto && existing.photo_url ? (
             <div className="space-y-2">
               <div className="relative overflow-hidden rounded-2xl border border-border bg-muted">
                 <Image
                   src={existing.photo_url}
-                  alt="Aktualne zdjęcie"
+                  alt={t("photo.current")}
                   width={800}
                   height={600}
                   className="h-auto w-full object-cover"
@@ -257,7 +249,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
                   size="sm"
                   onClick={() => setPhotoMode("replace")}
                 >
-                  Zmień zdjęcie
+                  {t("photo.replace")}
                 </Button>
                 <Button
                   type="button"
@@ -267,14 +259,14 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
                   className="text-destructive"
                 >
                   <Trash2 className="mr-1 h-3.5 w-3.5" />
-                  Usuń zdjęcie
+                  {t("photo.remove")}
                 </Button>
               </div>
             </div>
           ) : photoMode === "remove" ? (
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">
-                Zdjęcie zostanie usunięte przy zapisie.
+                {t("photo.deleteOnSave")}
               </p>
               <Button
                 type="button"
@@ -282,7 +274,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
                 size="sm"
                 onClick={() => setPhotoMode("keep")}
               >
-                Cofnij
+                {t("photo.undo")}
               </Button>
             </div>
           ) : (
@@ -291,7 +283,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
         </Card>
 
         <Card className="space-y-3 p-5">
-          <Label>Lokalizacja złowienia</Label>
+          <Label>{t("catches.fields.location")}</Label>
           <LocationPicker
             value={
               form.watch("latitude") != null &&
@@ -318,16 +310,18 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             render={({ field }) => (
               <FormItem className="flex items-center justify-between rounded-xl border border-border p-3">
                 <div>
-                  <FormLabel className="text-base">Wypuszczona?</FormLabel>
+                  <FormLabel className="text-base">
+                    {t("catches.fields.released")}
+                  </FormLabel>
                   <p className="text-xs text-muted-foreground">
-                    Zaznacz, jeśli ryba wróciła do wody.
+                    {t("catches.fields.releasedHint")}
                   </p>
                 </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Wypuszczona"
+                    aria-label={t("catches.fields.released")}
                   />
                 </FormControl>
               </FormItem>
@@ -338,7 +332,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notatki</FormLabel>
+                <FormLabel>{t("catches.fields.notes")}</FormLabel>
                 <FormControl>
                   <Textarea
                     rows={4}
@@ -362,7 +356,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             onClick={() => router.back()}
             disabled={submitting}
           >
-            Anuluj
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={submitting}>
             {submitting ? (
@@ -370,7 +364,7 @@ export function CatchEditForm({ existing }: { existing: Catch }) {
             ) : (
               <Save className="mr-1.5 h-4 w-4" />
             )}
-            Zapisz zmiany
+            {t("common.saveChanges")}
           </Button>
         </div>
       </form>
