@@ -1,14 +1,8 @@
-﻿
+
 > fishlog@0.1.0 dev:lan
 > next dev -H 0.0.0.0 --experimental-https
 
-node.exe :  ⚠ Self-signed certificates are currently an experimental feature, use with caution.
-At line:1 char:1
-+ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ( ⚠ Self-signed ...e with caution.:String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
+ ⚠ Self-signed certificates are currently an experimental feature, use with caution.
    Attempting to generate self signed certificate. This may prompt for your password
    CA Root certificate created in C:\Users\tomasz.pyra\AppData\Local\mkcert
    Certificates created in C:\Projects\fishlog\certificates
@@ -18,4 +12,4 @@ At line:1 char:1
   - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 2.7s
+ ✓ Ready in 6.4s
