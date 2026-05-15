@@ -38,7 +38,10 @@ export const PasswordInput = React.forwardRef<
           visible ? t("auth.hidePassword") : t("auth.showPassword")
         }
         aria-pressed={visible}
-        className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-current/70 hover:text-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+        // Dark pill + light icon — stays readable on every background the
+        // input may end up on: dark login card, translucent bg-white/10
+        // input area, AND the yellow/blue Chrome autofill highlight.
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-[hsl(168_38%_12%)]/80 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-[hsl(168_38%_12%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
       >
         {visible ? (
           <EyeOff className="h-4 w-4" />
