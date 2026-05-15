@@ -36,10 +36,7 @@ export default async function LoginPage({
           <p className="text-sm text-[hsl(60_30%_75%)]">{t("app.tagline")}</p>
         </header>
 
-        <LoginCard
-          oauthError={searchParams.error === "oauth"}
-          redirectedFrom={searchParams.redirectedFrom}
-        />
+        <LoginCard redirectedFrom={searchParams.redirectedFrom} />
 
         <footer className="text-xs text-[hsl(60_20%_60%)]">
           © {new Date().getFullYear()} {t("app.name")}
