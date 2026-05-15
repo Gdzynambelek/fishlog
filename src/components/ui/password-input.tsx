@@ -38,10 +38,12 @@ export const PasswordInput = React.forwardRef<
           visible ? t("auth.hidePassword") : t("auth.showPassword")
         }
         aria-pressed={visible}
-        // Dark pill + light icon — stays readable on every background the
-        // input may end up on: dark login card, translucent bg-white/10
-        // input area, AND the yellow/blue Chrome autofill highlight.
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-[hsl(168_38%_12%)]/80 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-[hsl(168_38%_12%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        // Fully opaque dark pill so the eye is readable on any input bg
+        // (dark login, translucent input area, browser autofill highlight).
+        // (Earlier `bg-[hsl(...)]/80` didn't parse the alpha modifier on the
+        // arbitrary HSL value in Tailwind v3 → default state had no bg →
+        // icon was invisible on the light input area.)
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md bg-[hsl(168,38%,12%)] text-white shadow transition-colors hover:bg-[hsl(168,38%,6%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
       >
         {visible ? (
           <EyeOff className="h-4 w-4" />
