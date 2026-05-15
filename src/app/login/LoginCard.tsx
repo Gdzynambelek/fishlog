@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { z } from "zod";
 import { createClient } from "@/utils/supabase/client";
 import { useLoginSchema, type LoginFormValues } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
-type Mode = "signin" | "signup";
+type Mode = "signin" | "signup" | "forgot";
 
 export function LoginCard({
   oauthError,
@@ -51,6 +52,16 @@ export function LoginCard({
     defaultValues: { email: "", password: "" },
   });
 
+  // Separate form for the forgot-password view — only needs an email field.
+  // Lives in the same component so a Tab switch doesn't unmount it.
+  const forgotSchema = z.object({
+    email: z.string().email(t("auth.errorInvalidCredentials")),
+  });
+  const forgotForm = useForm<{ email: string }>({
+    resolver: zodResolver(forgotSchema),
+    defaultValues: { email: "" },
+  });
+
   async function onSubmit(values: LoginFormValues) {
     setSubmitting(true);
     try {
@@ -65,7 +76,7 @@ export function LoginCard({
         toast.success(t("auth.signedIn"));
         router.replace(redirectedFrom ?? "/dashboard");
         router.refresh();
-      } else {
+      } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email: values.email,
           password: values.password,
@@ -89,6 +100,32 @@ export function LoginCard({
     }
   }
 
+  async function onForgotSubmit(values: { email: string }) {
+    setSubmitting(true);
+    try {
+      // Recovery link flows through /auth/callback (exchanges PKCE code for a
+      // session cookie) and then forwards to /auth/reset-password where the
+      // user picks a new password.
+      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`;
+      const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
+        redirectTo,
+      });
+      if (error) {
+        toast.error(t("auth.resetRequestFailed"), { description: error.message });
+        return;
+      }
+      // Always show success regardless of whether the email exists —
+      // standard practice to not leak which addresses are registered.
+      toast.success(t("auth.resetLinkSent"), {
+        description: t("auth.resetLinkSentDescription"),
+      });
+      forgotForm.reset();
+      setMode("signin");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   async function signInWithGoogle() {
     setOauthLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -101,6 +138,65 @@ export function LoginCard({
       setOauthLoading(false);
       toast.error(t("auth.oauthFailed"), { description: error.message });
     }
+  }
+
+  // Forgot-password view replaces the tabs entirely — focused single-task screen.
+  if (mode === "forgot") {
+    return (
+      <Card className="w-full max-w-md border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur [&_label]:text-white/90">
+        <button
+          type="button"
+          onClick={() => setMode("signin")}
+          className="-ml-1 mb-3 inline-flex items-center gap-1 text-xs text-white/70 hover:text-white"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          {t("auth.backToSignIn")}
+        </button>
+        <h2 className="text-xl font-semibold">
+          {t("auth.forgotPasswordTitle")}
+        </h2>
+        <p className="mt-1 text-sm text-white/70">
+          {t("auth.forgotPasswordDescription")}
+        </p>
+        <Form {...forgotForm}>
+          <form
+            onSubmit={forgotForm.handleSubmit(onForgotSubmit)}
+            className="mt-5 space-y-3"
+            noValidate
+          >
+            <FormField
+              control={forgotForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("auth.email")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      autoComplete="email"
+                      inputMode="email"
+                      placeholder={t("auth.emailPlaceholder")}
+                      className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={submitting}
+            >
+              {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t("auth.sendResetLink")}
+            </Button>
+          </form>
+        </Form>
+      </Card>
+    );
   }
 
   return (
@@ -201,6 +297,18 @@ export function LoginCard({
                 {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {mode === "signin" ? t("auth.signIn") : t("auth.signUp")}
               </Button>
+
+              {mode === "signin" ? (
+                <div className="pt-1 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setMode("forgot")}
+                    className="text-xs text-white/70 underline-offset-2 hover:text-white hover:underline"
+                  >
+                    {t("auth.forgotPassword")}
+                  </button>
+                </div>
+              ) : null}
             </form>
           </Form>
         </TabsContent>
