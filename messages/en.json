@@ -72,7 +72,9 @@
     "savePassword": "Save password",
     "passwordChanged": "Password changed. You're signed in.",
     "passwordChangeFailed": "Failed to change password.",
-    "resetSessionMissing": "Link is invalid or expired. Request a new recovery link."
+    "resetSessionMissing": "Link is invalid or expired. Request a new recovery link.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "dashboard": {
     "greeting": "Hi, {name}! 👋",

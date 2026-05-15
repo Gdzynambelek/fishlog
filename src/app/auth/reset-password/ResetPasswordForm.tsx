@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function ResetPasswordForm() {
   const t = useTranslations();
@@ -81,8 +81,7 @@ export function ResetPasswordForm() {
             <FormItem>
               <FormLabel>{t("auth.newPassword")}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="new-password"
                   className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
                   {...field}
@@ -99,8 +98,7 @@ export function ResetPasswordForm() {
             <FormItem>
               <FormLabel>{t("auth.confirmPassword")}</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
+                <PasswordInput
                   autoComplete="new-password"
                   className="h-11 border-white/15 bg-white/10 text-white placeholder:text-white/50 focus-visible:ring-white/30"
                   {...field}

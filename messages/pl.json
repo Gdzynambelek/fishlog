@@ -72,7 +72,9 @@
     "savePassword": "Zapisz hasło",
     "passwordChanged": "Hasło zmienione. Zalogowano.",
     "passwordChangeFailed": "Nie udało się zmienić hasła.",
-    "resetSessionMissing": "Link jest nieprawidłowy lub wygasł. Poproś o nowy link odzyskiwania."
+    "resetSessionMissing": "Link jest nieprawidłowy lub wygasł. Poproś o nowy link odzyskiwania.",
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło"
   },
   "dashboard": {
     "greeting": "Cześć, {name}! 👋",

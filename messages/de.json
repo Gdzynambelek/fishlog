@@ -72,7 +72,9 @@
     "savePassword": "Passwort speichern",
     "passwordChanged": "Passwort geändert. Du bist angemeldet.",
     "passwordChangeFailed": "Passwort konnte nicht geändert werden.",
-    "resetSessionMissing": "Link ist ungültig oder abgelaufen. Fordere einen neuen Wiederherstellungslink an."
+    "resetSessionMissing": "Link ist ungültig oder abgelaufen. Fordere einen neuen Wiederherstellungslink an.",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen"
   },
   "dashboard": {
     "greeting": "Hallo, {name}! 👋",
